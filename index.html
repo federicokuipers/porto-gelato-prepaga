@@ -534,9 +534,16 @@ const fmt      = n => '$' + Math.round(n).toLocaleString('es-AR');
 const bonusPct = m => m >= 50000 ? 0.20 : 0.15;
 const toDay    = () => new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
 
-// Restore API silently
-const savedApi = localStorage.getItem('pg_api_admin');
+// Restaurar URL guardada — disponible para todos los roles
+const savedApi = localStorage.getItem('pg_api');
 if (savedApi) API = savedApi;
+
+// Restaurar último local usado
+const savedLocal = localStorage.getItem('pg_last_local');
+if (savedLocal) {
+  const sel = document.getElementById('login-local');
+  if (sel) sel.value = savedLocal;
+}
 
 // ═══════════════════════════════════════════
 // LOGIN
@@ -555,6 +562,9 @@ function doLogin() {
 
   if (!rolDetectado) { err.textContent='Contraseña incorrecta.'; err.classList.add('on'); return; }
   err.classList.remove('on');
+
+  // Guardar último local usado para pre-seleccionar la próxima vez
+  localStorage.setItem('pg_last_local', local);
 
   rol = rolDetectado;
   sesionLocal = local === '__admin__' ? 'Porto Gelato - Av. España' : local;
@@ -583,9 +593,9 @@ function doLogin() {
     document.getElementById('admin-local-sel').style.display = 'block';
     document.getElementById('local-activo-label').style.display = 'none';
     document.getElementById('admin-local-sel').value = sesionLocal;
-    if (savedApi) {
-      document.getElementById('api-url').value = savedApi;
-    }
+    // Cargar URL guardada en campo de config
+    const urlGuardada = localStorage.getItem('pg_api');
+    if (urlGuardada) document.getElementById('api-url').value = urlGuardada;
   } else {
     document.getElementById('admin-local-sel').style.display = 'none';
     document.getElementById('local-activo-label').style.display = 'inline';
@@ -595,11 +605,26 @@ function doLogin() {
   document.getElementById('movs-sub').textContent  = sesionLocal;
   document.getElementById('mi-local-label').textContent = sesionLocal;
 
+  // Verificar conexión silenciosamente al entrar
+  if (API) {
+    apiCall({action:'getTarjetas'}).then(d => {
+      if (d.ok) {
+        tarjetasCache = d.tarjetas||[];
+        // Mostrar indicador verde en nav solo para admin
+        if (rol === 'admin') setDot('ok','Conectado — '+tarjetasCache.length+' tarjetas');
+      }
+    }).catch(()=>{
+      if (rol === 'admin') setDot('err','Sin conexión — revisá la URL en Config');
+    });
+  } else if (rol === 'admin') {
+    setDot('err','URL no configurada — andá a Config');
+  }
+
   // Ir a pantalla inicial
   const primerTab = document.getElementById(tabs[rol][0]);
   const primerScr = tabs[rol][0].replace('ntab-','');
   showScr(primerScr === 'op' ? 'op' : primerScr === 'mi' ? 'mi' : primerScr === 'dash' ? 'dash' : 'cfg', primerTab);
-  loadCache();
+  if (!API) loadCache();
 }
 
 function doLogout() {
@@ -682,7 +707,7 @@ function showTab(id, btn) {
 // ═══════════════════════════════════════════
 function onUrlChange() {
   API = document.getElementById('api-url').value.trim();
-  localStorage.setItem('pg_api_admin', API);
+  localStorage.setItem('pg_api', API);
 }
 function setDot(state, label) {
   const dot = document.getElementById('cdot');
@@ -696,9 +721,12 @@ async function testConn() {
   setDot('loading','Conectando...');
   try {
     const d = await apiCall({action:'getTarjetas'});
-    if (d.ok!==undefined) { tarjetasCache=d.tarjetas||[]; setDot('ok','Conectado ('+tarjetasCache.length+' tarjetas)'); }
-    else setDot('err','Respuesta inesperada');
-  } catch(e) { setDot('err','Error de conexión'); }
+    if (d.ok!==undefined) {
+      tarjetasCache=d.tarjetas||[];
+      setDot('ok','Conectado — '+tarjetasCache.length+' tarjetas');
+      localStorage.setItem('pg_api', API);
+    } else setDot('err','Respuesta inesperada');
+  } catch(e) { setDot('err','Error — revisá la URL'); }
 }
 
 // ═══════════════════════════════════════════
