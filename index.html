@@ -6,74 +6,61 @@
 <title>Porto Gelato — Tarjeta Prepaga</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
   --y:#FFD600;--yd:#E6C200;--yp:#FFFBE6;
   --bk:#1A1A1A;--g7:#4A4A4A;--g5:#888;--g2:#E8E8E8;--g1:#F5F5F5;
   --wh:#FFFFFF;--gn:#22C55E;--gnp:#DCFCE7;--rd:#EF4444;--rdp:#FEE2E2;
-  --bl:#3B82F6;--blp:#DBEAFE;
+  --or:#F97316;--orp:#FFF1E6;--bl:#3B82F6;--blp:#DBEAFE;--pu:#8B5CF6;--pup:#EDE9FE;
   --r:12px;--rs:8px;--sh:0 2px 12px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',system-ui,sans-serif;background:var(--g1);color:var(--bk);min-height:100vh;}
 
 /* LOGIN */
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-.login-box{background:var(--wh);border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.12);}
-.login-logo{width:48px;height:48px;background:var(--bk);border-radius:10px;display:grid;place-items:center;margin-bottom:20px;}
-.login-logo span{color:var(--y);font-size:16px;font-weight:700;letter-spacing:-.5px;}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bk);}
+.login-box{background:var(--wh);border-radius:20px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.login-logo{width:52px;height:52px;background:var(--y);border-radius:12px;display:grid;place-items:center;margin-bottom:20px;}
+.login-logo span{color:var(--bk);font-size:18px;font-weight:700;letter-spacing:-.5px;}
 .login-box h1{font-size:22px;font-weight:600;margin-bottom:4px;}
 .login-box p{font-size:13px;color:var(--g5);margin-bottom:28px;}
-.login-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
-.login-field label{font-size:11px;font-weight:600;color:var(--g5);text-transform:uppercase;letter-spacing:.05em;}
-.login-field select,.login-field input{border:1.5px solid var(--g2);border-radius:var(--rs);padding:11px 14px;font-family:inherit;font-size:14px;outline:none;transition:border-color .15s;background:var(--wh);}
-.login-field select:focus,.login-field input:focus{border-color:var(--y);}
-.login-err{background:var(--rdp);color:#DC2626;border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;border-left:3px solid var(--rd);}
-.login-err.on{display:block;}
+.lf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.lf label{font-size:11px;font-weight:600;color:var(--g5);text-transform:uppercase;letter-spacing:.05em;}
+.lf select,.lf input{border:1.5px solid var(--g2);border-radius:var(--rs);padding:11px 14px;font-family:inherit;font-size:14px;outline:none;transition:border-color .15s;}
+.lf select:focus,.lf input:focus{border-color:var(--y);}
+.lerr{background:var(--rdp);color:#DC2626;border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;border-left:3px solid var(--rd);}
+.lerr.on{display:block;}
+.login-link{text-align:center;margin-top:18px;}
+.login-link a{font-size:13px;color:var(--g5);text-decoration:none;transition:color .15s;}
+.login-link a:hover{color:var(--bk);}
 
 /* NAV */
 .nav{background:var(--bk);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3);}
 .nb{display:flex;align-items:center;gap:10px;}
-.ndot{width:30px;height:30px;background:var(--y);border-radius:7px;display:grid;place-items:center;font-size:14px;font-weight:700;color:var(--bk);letter-spacing:-.5px;}
+.ndot{width:30px;height:30px;background:var(--y);border-radius:7px;display:grid;place-items:center;font-size:14px;font-weight:700;color:var(--bk);}
 .ntitle{color:var(--wh);font-size:14px;font-weight:600;}
 .nsub{color:var(--g5);font-size:11px;}
 .ntabs{display:flex;gap:2px;align-items:center;}
-.ntab{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--g5);border:none;background:transparent;transition:all .15s;font-family:inherit;}
+.ntab{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--g5);border:none;background:transparent;transition:all .15s;font-family:inherit;display:none;}
 .ntab.on{background:var(--y);color:var(--bk);}
 .ntab:hover:not(.on){background:rgba(255,255,255,.08);color:var(--wh);}
-.nav-user{color:var(--g5);font-size:12px;margin-right:8px;}
-.btn-logout{background:transparent;border:1px solid #444;color:var(--g5);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.nav-role{background:rgba(255,255,255,.08);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--g5);margin-right:6px;}
+.btn-logout{background:transparent;border:1px solid #444;color:var(--g5);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;}
 .btn-logout:hover{border-color:var(--rd);color:var(--rd);}
 
-/* CFG STRIP */
-.cfg{background:#111;border-bottom:1px solid #2a2a2a;padding:8px 20px;}
-.cfg-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.cfg label{color:var(--g5);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
-.cfg-url{flex:1;min-width:200px;border:1.5px solid #333;border-radius:var(--rs);padding:8px 12px;font-size:12px;background:#1e1e1e;color:var(--wh);font-family:'DM Mono',monospace;outline:none;transition:border-color .15s;}
-.cfg-url:focus{border-color:var(--y);}
-.cfg-url::placeholder{color:#555;}
-.cstat{display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--g5);flex-shrink:0;}
-.dot.ok{background:var(--gn);}
-.dot.err{background:var(--rd);}
-.dot.loading{background:var(--y);animation:pulse .8s ease-in-out infinite;}
-.cstat span{color:var(--g5);}
-.cstat.ok span{color:var(--gn);}
-.cstat.err span{color:var(--rd);}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
 /* SCREENS */
-.scr{display:none;padding:20px;max-width:940px;margin:0 auto;}
+.scr{display:none;padding:20px;max-width:980px;margin:0 auto;}
 .scr.on{display:block;}
 
 /* CARDS */
 .card{background:var(--wh);border-radius:var(--r);padding:20px;box-shadow:var(--sh);margin-bottom:12px;}
-.ch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}
+.ch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:8px;}
 .ct{font-size:15px;font-weight:600;}
 .cs{font-size:12px;color:var(--g5);margin-top:2px;}
 
 /* INNER TABS */
-.itabs{display:flex;gap:3px;margin-bottom:14px;background:var(--g2);border-radius:var(--rs);padding:3px;width:fit-content;}
+.itabs{display:flex;gap:3px;margin-bottom:14px;background:var(--g2);border-radius:var(--rs);padding:3px;width:fit-content;flex-wrap:wrap;}
 .itab{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--g7);transition:all .15s;font-family:inherit;}
 .itab.on{background:var(--wh);color:var(--bk);box-shadow:0 1px 4px rgba(0,0,0,.1);}
 
@@ -99,6 +86,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--g1);color:var(-
 .btn-y:disabled{opacity:.45;cursor:not-allowed;transform:none;}
 .btn-s{background:var(--g1);color:var(--g7);}
 .btn-s:hover{background:var(--g2);}
+.btn-g{background:var(--gnp);color:#15803D;}
+.btn-g:hover{background:#bbf7d0;}
 .btn-full{width:100%;margin-top:14px;}
 .btn-sm{padding:6px 12px;font-size:12px;}
 
@@ -117,16 +106,17 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--g1);color:var(-
 .ccard .sv.low{color:var(--rd);}
 .ccard .si{margin-top:8px;font-size:11px;color:#555;}
 .ccard .ftag{position:absolute;right:20px;bottom:20px;background:rgba(255,255,255,.07);border-radius:20px;padding:4px 10px;font-size:11px;color:#555;}
+.alert-saldo-bajo{background:var(--rdp);border:1.5px solid var(--rd);border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:600;color:#DC2626;margin-bottom:12px;display:none;}
+.alert-saldo-bajo.on{display:block;}
 
 /* PORTAL CLIENTE */
-.portal-wrap{min-height:calc(100vh - 54px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.portal-wrap{min-height:calc(100vh - 54px);display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bk);}
 .portal-box{background:var(--wh);border-radius:16px;padding:36px;width:100%;max-width:440px;box-shadow:var(--sh);}
 .portal-header{text-align:center;margin-bottom:28px;}
-.portal-header .logo{width:52px;height:52px;background:var(--bk);border-radius:12px;display:grid;place-items:center;margin:0 auto 14px;}
-.portal-header .logo span{color:var(--y);font-size:18px;font-weight:700;}
+.portal-header .logo{width:52px;height:52px;background:var(--y);border-radius:12px;display:grid;place-items:center;margin:0 auto 14px;}
+.portal-header .logo span{color:var(--bk);font-size:18px;font-weight:700;}
 .portal-header h2{font-size:20px;font-weight:600;margin-bottom:4px;}
 .portal-header p{font-size:13px;color:var(--g5);}
-.portal-result{margin-top:20px;}
 .saldo-big{background:var(--bk);border-radius:var(--r);padding:24px;color:var(--wh);text-align:center;margin-bottom:14px;}
 .saldo-big .sl{font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
 .saldo-big .sv{font-family:'DM Mono',monospace;font-size:42px;font-weight:500;color:var(--y);}
@@ -146,6 +136,8 @@ tbody tr:hover{background:var(--g1);}
 .bg{background:var(--gnp);color:#15803D;}
 .br{background:var(--rdp);color:#DC2626;}
 .by{background:var(--yp);color:#92400E;}
+.bbl{background:var(--blp);color:#1D4ED8;}
+.bpu{background:var(--pup);color:#6D28D9;}
 .mono{font-family:'DM Mono',monospace;font-size:12px;}
 
 /* KPI */
@@ -157,6 +149,26 @@ tbody tr:hover{background:var(--g1);}
 .kpi.hi .kl,.kpi.hi .ks{color:var(--g5);}
 .kpi.hi .kv{color:var(--y);}
 .ks{font-size:11px;color:var(--g5);margin-top:3px;}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.chart-card{background:var(--wh);border-radius:var(--r);padding:20px;box-shadow:var(--sh);}
+.chart-card .ct{font-size:14px;font-weight:600;margin-bottom:16px;}
+.chart-wrap{position:relative;height:220px;}
+
+/* RANKING */
+.rank-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--g1);}
+.rank-item:last-child{border-bottom:none;}
+.rank-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.rank-1{background:var(--y);color:var(--bk);}
+.rank-2{background:var(--g2);color:var(--g7);}
+.rank-3{background:#FED7AA;color:#92400E;}
+.rank-n{background:var(--g1);color:var(--g5);}
+.rank-name{flex:1;font-size:13px;font-weight:500;}
+.rank-bars{display:flex;flex-direction:column;gap:4px;min-width:140px;}
+.rank-bar-row{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g5);}
+.rank-bar-bg{flex:1;height:4px;background:var(--g2);border-radius:2px;overflow:hidden;}
+.rank-bar-fill{height:100%;border-radius:2px;}
 
 /* ALERT */
 .al{border-radius:var(--rs);padding:12px 16px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;border-left:3px solid;}
@@ -171,35 +183,40 @@ tbody tr:hover{background:var(--g1);}
 .pbf{height:100%;background:var(--y);border-radius:4px;}
 .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--g2);border-top-color:var(--bk);border-radius:50%;animation:spn .6s linear infinite;}
 @keyframes spn{to{transform:rotate(360deg)}}
+
+/* LOCAL BAR */
+.local-bar{background:var(--wh);border-radius:var(--r);padding:12px 16px;box-shadow:var(--sh);margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.local-bar-label{font-size:13px;font-weight:600;color:var(--g5);white-space:nowrap;}
+.local-bar-name{font-size:14px;font-weight:600;}
+.local-bar-sel{flex:1;min-width:200px;border:1.5px solid var(--g2);border-radius:var(--rs);padding:7px 12px;font-family:inherit;font-size:13px;outline:none;background:var(--g1);}
+.local-bar-sel:focus{border-color:var(--y);}
+
+/* HELPBOX */
 .helpbox{background:var(--g1);border:1.5px solid var(--g2);border-radius:var(--r);padding:20px;margin-bottom:14px;}
 .helpbox h3{font-size:14px;font-weight:600;margin-bottom:10px;}
-.helpbox ol{padding-left:18px;display:flex;flex-direction:column;gap:8px;}
+.helpbox ol,.helpbox ul{padding-left:18px;display:flex;flex-direction:column;gap:8px;}
 .helpbox li{font-size:13px;color:var(--g7);line-height:1.5;}
 .helpbox code{font-family:'DM Mono',monospace;font-size:12px;background:var(--g2);padding:2px 6px;border-radius:4px;}
-.helpbox a{color:var(--bl);text-decoration:none;}
-.helpbox a:hover{text-decoration:underline;}
 
-@media(max-width:620px){
+@media(max-width:640px){
   .kpis{grid-template-columns:1fr 1fr;}
+  .charts-grid{grid-template-columns:1fr;}
   .fg{grid-template-columns:1fr;}
   .scr{padding:12px;}
   .nsub{display:none;}
-  .cfg-url{min-width:120px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     PANTALLA 0 — LOGIN
-══════════════════════════════════════════ -->
+<!-- ══ LOGIN ══ -->
 <div id="pg-login" class="login-wrap">
   <div class="login-box">
     <div class="login-logo"><span>PG</span></div>
     <h1>Porto Gelato</h1>
     <p>Sistema Tarjeta Prepaga — ingresá con tus credenciales</p>
-    <div class="login-err" id="login-err">Local o contraseña incorrectos.</div>
-    <div class="login-field">
+    <div class="lerr" id="login-err">Local o contraseña incorrectos.</div>
+    <div class="lf">
       <label>Mi local</label>
       <select id="login-local">
         <option value="">— Seleccioná tu local —</option>
@@ -208,23 +225,19 @@ tbody tr:hover{background:var(--g1);}
         <option value="Porto Gelato - Jovita">Porto Gelato - Jovita</option>
         <option value="Porto Gelato - Carpinteria">Porto Gelato - Carpintería</option>
         <option value="Porto Gelato - Merlo">Porto Gelato - Merlo</option>
-        <option value="__admin__">Administración (dashboard completo)</option>
+        <option value="__admin__">Administración</option>
       </select>
     </div>
-    <div class="login-field">
+    <div class="lf">
       <label>Contraseña</label>
       <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="btn btn-y btn-full" onclick="doLogin()">Ingresar</button>
-    <div style="margin-top:20px;text-align:center;">
-      <a href="#" onclick="showPortal()" style="font-size:13px;color:var(--g5);text-decoration:none;">¿Sos cliente? Consultá tu saldo →</a>
-    </div>
+    <button class="btn btn-y btn-full" onclick="doLogin()" style="margin-top:0">Ingresar</button>
+    <div class="login-link"><a href="#" onclick="showPortal()">¿Sos cliente? Consultá tu saldo →</a></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     PANTALLA PORTAL CLIENTE
-══════════════════════════════════════════ -->
+<!-- ══ PORTAL CLIENTE ══ -->
 <div id="pg-portal" style="display:none">
   <div style="background:var(--bk);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;">
     <div style="display:flex;align-items:center;gap:10px;">
@@ -241,57 +254,38 @@ tbody tr:hover{background:var(--g1);}
         <p>Ingresá tu DNI para ver tu tarjeta prepaga</p>
       </div>
       <div id="al-portal" class="al"></div>
-      <div class="login-field">
-        <label>Tu DNI (sin puntos)</label>
-        <input type="number" id="portal-dni" placeholder="Ej: 32456789" onkeydown="if(event.key==='Enter')buscarCliente()">
-      </div>
-      <button class="btn btn-y btn-full" id="btn-portal" onclick="buscarCliente()" style="margin-top:0">
-        Consultar saldo
-      </button>
-      <div id="portal-result" class="portal-result" style="display:none"></div>
+      <div class="lf"><label>Tu DNI (sin puntos)</label><input type="number" id="portal-dni" placeholder="Ej: 32456789" onkeydown="if(event.key==='Enter')buscarCliente()"></div>
+      <button class="btn btn-y btn-full" id="btn-portal" onclick="buscarCliente()" style="margin-top:0">Consultar saldo</button>
+      <div id="portal-result" style="display:none;margin-top:20px"></div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     APP PRINCIPAL (post-login)
-══════════════════════════════════════════ -->
+<!-- ══ APP ══ -->
 <div id="pg-app" style="display:none">
 
-<!-- NAV -->
 <nav class="nav">
   <div class="nb">
     <div class="ndot">PG</div>
-    <div>
-      <div class="ntitle">Porto Gelato</div>
-      <div class="nsub" id="nav-local">—</div>
-    </div>
+    <div><div class="ntitle">Porto Gelato</div><div class="nsub" id="nav-local">—</div></div>
   </div>
   <div class="ntabs">
-    <span class="nav-user" id="nav-user"></span>
-    <button class="ntab on"  id="ntab-fr"   onclick="showScr('fr',this)"   style="display:none">Mi local</button>
-    <button class="ntab"     id="ntab-dash" onclick="showScr('dash',this)" style="display:none">Dashboard</button>
-    <button class="ntab"     id="ntab-cfg"  onclick="showScr('ayuda',this)" style="display:none">Config</button>
+    <span class="nav-role" id="nav-role"></span>
+    <button class="ntab" id="ntab-op"   onclick="showScr('op',this)">Operaciones</button>
+    <button class="ntab" id="ntab-mi"   onclick="showScr('mi',this)">Mi local</button>
+    <button class="ntab" id="ntab-dash" onclick="showScr('dash',this)">Dashboard</button>
+    <button class="ntab" id="ntab-cfg"  onclick="showScr('cfg',this)">Config</button>
     <button class="btn-logout" onclick="doLogout()">Salir</button>
   </div>
 </nav>
 
-<!-- CFG STRIP -->
-<div class="cfg">
-  <div class="cfg-inner">
-    <label>Apps Script URL</label>
-    <input class="cfg-url" id="api-url" placeholder="https://script.google.com/macros/s/..." oninput="onUrlChange()">
-    <button class="btn btn-sm" style="background:var(--y);color:var(--bk);font-weight:600;font-family:inherit;" onclick="testConn()">Probar</button>
-    <div class="cstat" id="cstat"><div class="dot" id="cdot"></div><span id="clbl">Sin configurar</span></div>
-  </div>
-</div>
+<!-- ══ SCREEN: OPERACIONES (empleado + dueño + admin) ══ -->
+<div id="scr-op" class="scr">
 
-<!-- ══ FRANQUICIA ══ -->
-<div id="scr-fr" class="scr on">
-  <div style="background:var(--wh);border-radius:var(--r);padding:12px 16px;box-shadow:var(--sh);margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-    <div style="font-size:13px;font-weight:600;color:var(--g5);white-space:nowrap;">Local activo:</div>
-    <div style="font-size:14px;font-weight:600;" id="local-activo-label">—</div>
-    <select id="admin-local-sel" style="display:none;flex:1;border:1.5px solid var(--g2);border-radius:var(--rs);padding:7px 12px;font-family:inherit;font-size:13px;outline:none;background:var(--g1);" onchange="adminCambiaLocal()">
+  <div class="local-bar">
+    <span class="local-bar-label">Local activo:</span>
+    <span class="local-bar-name" id="local-activo-label">—</span>
+    <select id="admin-local-sel" class="local-bar-sel" style="display:none" onchange="adminCambiaLocal()">
       <option value="Porto Gelato - Av. España">Porto Gelato - Av. España</option>
       <option value="Porto Gelato - Banda Norte">Porto Gelato - Banda Norte</option>
       <option value="Porto Gelato - Jovita">Porto Gelato - Jovita</option>
@@ -302,6 +296,7 @@ tbody tr:hover{background:var(--g1);}
 
   <div class="itabs">
     <button class="itab on" onclick="showTab('nueva',this)">Nueva tarjeta</button>
+    <button class="itab" onclick="showTab('recargar',this)">Recargar saldo</button>
     <button class="itab" onclick="showTab('consumo',this)">Registrar consumo</button>
     <button class="itab" onclick="showTab('movs',this)">Movimientos</button>
   </div>
@@ -313,7 +308,7 @@ tbody tr:hover{background:var(--g1);}
       <div id="al-nueva" class="al"></div>
       <div class="fg">
         <div class="ff full"><label>DNI del titular (sin puntos)</label><input type="number" id="n-dni" placeholder="Ej: 32456789" oninput="updNueva()"></div>
-        <div class="ff"><label>Nombre y apellido</label><input id="n-nom" placeholder="Ej: García, Martín" oninput="updNueva()"></div>
+        <div class="ff"><label>Nombre y apellido</label><input id="n-nom" placeholder="Ej: García, Martín"></div>
         <div class="ff"><label>Teléfono / WhatsApp</label><input id="n-tel" placeholder="Ej: 358-4123456"></div>
         <div class="ff"><label>Monto que paga ($)</label><input type="number" id="n-monto" placeholder="Ej: 20000" min="0" oninput="updNueva()"></div>
         <div class="ff"><label>ID Tarjeta (= DNI)</label><input id="n-id" readonly placeholder="Se completa con el DNI"></div>
@@ -327,14 +322,40 @@ tbody tr:hover{background:var(--g1);}
     </div>
   </div>
 
+  <!-- RECARGAR SALDO -->
+  <div id="tab-recargar" style="display:none">
+    <div class="card" style="margin-bottom:12px">
+      <div class="ct" style="margin-bottom:12px">Buscar cliente para recargar</div>
+      <div class="srow"><input id="busq-rec" placeholder="Nombre, DNI o teléfono..." oninput="buscarParaRecargar()"></div>
+      <div id="busq-rec-res" style="margin-top:10px"></div>
+    </div>
+    <div id="rec-panel" style="display:none">
+      <div id="rec-ccard-html"></div>
+      <div class="card">
+        <div class="ch"><div class="ct">Agregar saldo</div></div>
+        <div id="al-rec" class="al"></div>
+        <div class="fg">
+          <div class="ff"><label>Monto que paga ($)</label><input type="number" id="rec-monto" placeholder="Ej: 10000" min="0" oninput="updRecarga()"></div>
+          <div class="ff"><label>Saldo nuevo total</label><input id="rec-nuevo" readonly placeholder="—"></div>
+        </div>
+        <div class="bprev" style="margin-top:8px">
+          <div><div class="lbl">Crédito a sumar</div><div class="sub" id="rec-bdet">Ingresá el monto</div></div>
+          <div style="text-align:right"><div class="val" id="rec-tot">$0</div></div>
+        </div>
+        <button class="btn btn-y btn-full" id="btn-rec" onclick="regRecarga()">Confirmar recarga</button>
+      </div>
+    </div>
+  </div>
+
   <!-- CONSUMO -->
   <div id="tab-consumo" style="display:none">
-    <div class="card">
+    <div class="card" style="margin-bottom:12px">
       <div class="ct" style="margin-bottom:12px">Buscar cliente</div>
       <div class="srow"><input id="busq" placeholder="Nombre, DNI o teléfono..." oninput="buscar()"></div>
       <div id="busq-res" style="margin-top:10px"></div>
     </div>
     <div id="cpanel" style="display:none">
+      <div class="alert-saldo-bajo" id="alerta-saldo-bajo">⚠ Saldo bajo — ofrecele al cliente recargar su tarjeta</div>
       <div id="ccard-html"></div>
       <div class="card">
         <div class="ch"><div class="ct">Registrar consumo</div></div>
@@ -349,7 +370,7 @@ tbody tr:hover{background:var(--g1);}
     </div>
   </div>
 
-  <!-- MOVIMIENTOS -->
+  <!-- MOVIMIENTOS LOCAL -->
   <div id="tab-movs" style="display:none">
     <div class="card">
       <div class="ch">
@@ -357,31 +378,72 @@ tbody tr:hover{background:var(--g1);}
         <button class="btn btn-sm btn-s" onclick="loadMovs()"><span id="movs-spin" style="display:none" class="spin"></span> Actualizar</button>
       </div>
       <div class="tw"><table>
-        <thead><tr><th>Fecha</th><th>DNI</th><th>Titular</th><th>Tipo</th><th style="text-align:right">Monto</th><th style="text-align:right">Saldo</th></tr></thead>
-        <tbody id="movs-body"><tr><td colspan="6" class="empty">Cargando...</td></tr></tbody>
+        <thead><tr><th>Fecha</th><th>Hora</th><th>DNI</th><th>Titular</th><th>Tipo</th><th style="text-align:right">Monto</th><th style="text-align:right">Saldo</th></tr></thead>
+        <tbody id="movs-body"><tr><td colspan="7" class="empty">Cargando...</td></tr></tbody>
       </table></div>
     </div>
   </div>
 </div>
 
-<!-- ══ DASHBOARD ══ -->
+<!-- ══ SCREEN: MI LOCAL (dueño + admin) ══ -->
+<div id="scr-mi" class="scr">
+  <div class="kpis" id="mi-kpis">
+    <div class="kpi hi"><div class="kl">Tarjetas activas</div><div class="kv" id="mi-act">—</div><div class="ks">en este local</div></div>
+    <div class="kpi"><div class="kl">Cash cargado</div><div class="kv mono" id="mi-carg">—</div><div class="ks">total cobrado</div></div>
+    <div class="kpi"><div class="kl">Consumido</div><div class="kv mono" id="mi-cons">—</div><div class="ks">del crédito</div></div>
+    <div class="kpi"><div class="kl">Saldo pendiente</div><div class="kv mono" id="mi-sald">—</div><div class="ks">a consumir</div></div>
+  </div>
+  <div class="card">
+    <div class="ch">
+      <div><div class="ct">Todas las tarjetas del local</div><div class="cs" id="mi-local-label">—</div></div>
+      <button class="btn btn-sm btn-s" onclick="loadMiLocal()"><span id="mi-spin" style="display:none" class="spin"></span> Actualizar</button>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>DNI</th><th>Titular</th><th>Tel</th><th style="text-align:right">Cargado</th><th style="text-align:right">Consumido</th><th style="text-align:right">Saldo</th><th>Estado</th></tr></thead>
+      <tbody id="mi-tbody"><tr><td colspan="7" class="empty">Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: DASHBOARD (admin) ══ -->
 <div id="scr-dash" class="scr">
   <div class="kpis">
-    <div class="kpi hi"><div class="kl">Tarjetas activas</div><div class="kv" id="d-act">—</div><div class="ks">en toda la cadena</div></div>
+    <div class="kpi hi"><div class="kl">Tarjetas activas</div><div class="kv" id="d-act">—</div><div class="ks">toda la cadena</div></div>
     <div class="kpi"><div class="kl">Cash adelantado</div><div class="kv mono" id="d-carg">—</div><div class="ks">total cobrado</div></div>
     <div class="kpi"><div class="kl">Consumido</div><div class="kv mono" id="d-cons">—</div><div class="ks">del crédito total</div></div>
     <div class="kpi"><div class="kl">Saldo pendiente</div><div class="kv mono" id="d-sald">—</div><div class="ks">a consumir</div></div>
   </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="ct">Saldo cargado por franquicia</div>
+      <div class="chart-wrap"><canvas id="chart-cargado"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="ct">Tarjetas activas por franquicia</div>
+      <div class="chart-wrap"><canvas id="chart-activas"></canvas></div>
+    </div>
+  </div>
+
   <div class="card" style="margin-bottom:12px">
     <div class="ch">
-      <div><div class="ct">Resumen por franquicia</div><div class="cs">Datos en tiempo real desde Google Sheets</div></div>
+      <div><div class="ct">Ranking de franquicias</div><div class="cs">Por saldo cargado, tarjetas activas y % de consumo</div></div>
       <button class="btn btn-sm btn-s" onclick="loadDash()"><span id="dash-spin" style="display:none" class="spin"></span> Actualizar</button>
+    </div>
+    <div id="ranking-wrap"><div class="empty">Cargando...</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="ch">
+      <div><div class="ct">Resumen por franquicia</div></div>
+      <button class="btn btn-sm btn-g" onclick="exportarExcel()">↓ Exportar Excel</button>
     </div>
     <div class="tw"><table>
       <thead><tr><th>Franquicia</th><th>Tarjetas</th><th style="text-align:right">Cargado</th><th style="text-align:right">Consumido</th><th style="text-align:right">Saldo</th><th>% usado</th></tr></thead>
-      <tbody id="dash-body"><tr><td colspan="6" class="empty">Configurá la URL de Apps Script</td></tr></tbody>
+      <tbody id="dash-body"><tr><td colspan="6" class="empty">Cargando...</td></tr></tbody>
     </table></div>
   </div>
+
   <div class="card">
     <div class="ch"><div class="ct">Últimos movimientos — toda la cadena</div></div>
     <div class="tw"><table>
@@ -391,30 +453,41 @@ tbody tr:hover{background:var(--g1);}
   </div>
 </div>
 
-<!-- ══ CONFIGURACIÓN ══ -->
-<div id="scr-ayuda" class="scr">
+<!-- ══ SCREEN: CONFIG (admin) ══ -->
+<div id="scr-cfg" class="scr">
   <div class="card">
-    <div class="ch"><div><div class="ct">Credenciales de acceso por local</div><div class="cs">Modificá estas claves directamente en el código</div></div></div>
+    <div class="ch"><div><div class="ct">Conexión Google Sheets</div><div class="cs">Solo visible para administrador</div></div></div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <input id="api-url" placeholder="https://script.google.com/macros/s/..." style="flex:1;min-width:200px;border:1.5px solid var(--g2);border-radius:var(--rs);padding:10px 12px;font-family:'DM Mono',monospace;font-size:12px;outline:none;" oninput="onUrlChange()">
+      <button class="btn btn-sm btn-s" onclick="testConn()"><span id="cdot" style="width:8px;height:8px;border-radius:50%;background:var(--g5);display:inline-block"></span> Probar</button>
+      <span id="clbl" style="font-size:12px;color:var(--g5)">Sin configurar</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div><div class="ct">Credenciales por local</div><div class="cs">Para cambiarlas, editá el objeto CLAVES en el código</div></div></div>
     <div class="helpbox">
-      <h3>Claves actuales</h3>
-      <ol>
-        <li>Porto Gelato - Av. España → <code>espania2024</code></li>
-        <li>Porto Gelato - Banda Norte → <code>bandanorte2024</code></li>
-        <li>Porto Gelato - Jovita → <code>jovita2024</code></li>
-        <li>Porto Gelato - Carpintería → <code>carpinteria2024</code></li>
-        <li>Porto Gelato - Merlo → <code>merlo2024</code></li>
-        <li>Administración (dashboard) → <code>portoadmin2024</code></li>
-      </ol>
-      <p style="margin-top:12px;font-size:12px;color:var(--g5);">Para cambiarlas, buscá el objeto <code>CLAVES</code> en el código JavaScript del archivo HTML y modificá los valores.</p>
+      <h3>Empleados (operaciones básicas)</h3>
+      <ul>
+        <li>Av. España → <code>us-espania</code></li>
+        <li>Banda Norte → <code>us-bandanorte</code></li>
+        <li>Jovita → <code>us-jovita</code></li>
+        <li>Carpintería → <code>us-carpinteria</code></li>
+        <li>Merlo → <code>us-merlo</code></li>
+      </ul>
     </div>
     <div class="helpbox">
-      <h3>Cómo agregar un nuevo local</h3>
-      <ol>
-        <li>Agregá una línea en el <code>select</code> del login y del portal (si aplica).</li>
-        <li>Agregá la clave en el objeto <code>CLAVES</code> del JavaScript.</li>
-        <li>Agregá el nombre en el array <code>franqs</code> del dashboard.</li>
-        <li>Guardá y volvé a subir el archivo a GitHub.</li>
-      </ol>
+      <h3>Dueños de franquicia (operaciones + métricas del local)</h3>
+      <ul>
+        <li>Av. España → <code>due-espania</code></li>
+        <li>Banda Norte → <code>due-bandanorte</code></li>
+        <li>Jovita → <code>due-jovita</code></li>
+        <li>Carpintería → <code>due-carpinteria</code></li>
+        <li>Merlo → <code>due-merlo</code></li>
+      </ul>
+    </div>
+    <div class="helpbox">
+      <h3>Administrador (acceso total)</h3>
+      <ul><li>Administración → <code>portoadmin2024</code></li></ul>
     </div>
   </div>
   <div class="card">
@@ -432,498 +505,660 @@ tbody tr:hover{background:var(--g1);}
 </div><!-- /pg-app -->
 
 <script>
-// ═══════════════════════════════════════════════════
-//  CREDENCIALES — modificá acá para cambiar claves
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// CREDENCIALES
+// ═══════════════════════════════════════════
 const CLAVES = {
-  'Porto Gelato - Av. España':   'espania2024',
-  'Porto Gelato - Banda Norte':  'bandanorte2024',
-  'Porto Gelato - Jovita':       'jovita2024',
-  'Porto Gelato - Carpinteria':  'carpinteria2024',
-  'Porto Gelato - Merlo':        'merlo2024',
-  '__admin__':                   'portoadmin2024'
+  'Porto Gelato - Av. España':   { us: 'us-espania',    due: 'due-espania'    },
+  'Porto Gelato - Banda Norte':  { us: 'us-bandanorte', due: 'due-bandanorte' },
+  'Porto Gelato - Jovita':       { us: 'us-jovita',     due: 'due-jovita'     },
+  'Porto Gelato - Carpinteria':  { us: 'us-carpinteria',due: 'due-carpinteria'},
+  'Porto Gelato - Merlo':        { us: 'us-merlo',      due: 'due-merlo'      },
+  '__admin__':                   { admin: 'portoadmin2024' }
 };
+const SALDO_BAJO = 5000;
+const FRANQS = ['Porto Gelato - Av. España','Porto Gelato - Banda Norte','Porto Gelato - Jovita','Porto Gelato - Carpinteria','Porto Gelato - Merlo'];
 
-// ═══════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════
-let API        = localStorage.getItem('pg_api') || '';
-let sesionLocal = '';   // local del encargado logueado
-let esAdmin    = false;
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let API = '';
+let sesionLocal = '';
+let rol = ''; // 'empleado' | 'dueno' | 'admin'
 let tarjetasCache = [];
 let selTarjeta = null;
-let activeTab  = 'nueva';
+let selRecarga = null;
+let charts = {};
 
 const fmt      = n => '$' + Math.round(n).toLocaleString('es-AR');
 const bonusPct = m => m >= 50000 ? 0.20 : 0.15;
 const toDay    = () => new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
 
-if (API) document.getElementById('api-url').value = API;
+// Restore API silently
+const savedApi = localStorage.getItem('pg_api_admin');
+if (savedApi) API = savedApi;
 
-// ═══════════════════════════════════════════════════
-//  LOGIN
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════
 function doLogin() {
   const local = document.getElementById('login-local').value;
   const pass  = document.getElementById('login-pass').value;
   const err   = document.getElementById('login-err');
+  if (!local) { err.textContent='Seleccioná tu local.'; err.classList.add('on'); return; }
 
-  if (!local)              { err.textContent='Seleccioná tu local.'; err.classList.add('on'); return; }
-  if (CLAVES[local] !== pass) { err.textContent='Contraseña incorrecta.'; err.classList.add('on'); return; }
+  const claves = CLAVES[local];
+  let rolDetectado = '';
+  if (local === '__admin__' && pass === claves.admin) rolDetectado = 'admin';
+  else if (claves && pass === claves.due) rolDetectado = 'dueno';
+  else if (claves && pass === claves.us)  rolDetectado = 'empleado';
 
+  if (!rolDetectado) { err.textContent='Contraseña incorrecta.'; err.classList.add('on'); return; }
   err.classList.remove('on');
-  sesionLocal = local;
-  esAdmin     = local === '__admin__';
+
+  rol = rolDetectado;
+  sesionLocal = local === '__admin__' ? 'Porto Gelato - Av. España' : local;
 
   document.getElementById('pg-login').style.display = 'none';
   document.getElementById('pg-app').style.display   = 'block';
 
-  // Configurar UI según rol
-  document.getElementById('nav-local').textContent  = esAdmin ? 'Administración' : local;
-  document.getElementById('nav-user').textContent   = esAdmin ? 'Admin' : 'Encargado';
+  const roleLabels = { empleado:'Empleado', dueno:'Dueño', admin:'Administrador' };
+  document.getElementById('nav-role').textContent  = roleLabels[rol];
+  document.getElementById('nav-local').textContent = rol === 'admin' ? 'Administración' : sesionLocal;
 
-  if (esAdmin) {
-    // Admin: ve todo — Mi local + Dashboard + Config
-    document.getElementById('ntab-fr').style.display   = 'inline-flex';
-    document.getElementById('ntab-dash').style.display = 'inline-flex';
-    document.getElementById('ntab-cfg').style.display  = 'inline-flex';
-    document.getElementById('ntab-fr').classList.remove('on');
-    document.getElementById('ntab-dash').classList.add('on');
+  // Mostrar tabs según rol
+  const tabs = {
+    empleado: ['ntab-op'],
+    dueno:    ['ntab-op','ntab-mi'],
+    admin:    ['ntab-op','ntab-mi','ntab-dash','ntab-cfg']
+  };
+  document.querySelectorAll('.ntab').forEach(t => t.style.display='none');
+  tabs[rol].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.display = 'inline-flex';
+  });
+
+  // Config admin-local-sel
+  if (rol === 'admin') {
+    document.getElementById('admin-local-sel').style.display = 'block';
     document.getElementById('local-activo-label').style.display = 'none';
-    document.getElementById('admin-local-sel').style.display  = 'block';
-    sesionLocal = 'Porto Gelato - Av. España';
-    document.getElementById('admin-local-sel').value = 'Porto Gelato - Av. España';
-    document.getElementById('movs-sub').textContent = 'Todos los locales';
-    showScr('dash', document.getElementById('ntab-dash'));
-    loadCache();
+    document.getElementById('admin-local-sel').value = sesionLocal;
+    if (savedApi) {
+      document.getElementById('api-url').value = savedApi;
+    }
   } else {
-    // Encargado: solo ve "Mi local"
-    document.getElementById('ntab-fr').style.display   = 'inline-flex';
-    document.getElementById('ntab-dash').style.display = 'none';
-    document.getElementById('ntab-cfg').style.display  = 'none';
-    document.getElementById('ntab-fr').classList.add('on');
-    document.getElementById('local-activo-label').textContent = local;
-    document.getElementById('movs-sub').textContent = local;
-    showScr('fr', document.getElementById('ntab-fr'));
-    loadCache();
+    document.getElementById('admin-local-sel').style.display = 'none';
+    document.getElementById('local-activo-label').style.display = 'inline';
+    document.getElementById('local-activo-label').textContent = sesionLocal;
   }
-}
 
-function adminCambiaLocal() {
-  const sel = document.getElementById('admin-local-sel').value;
-  sesionLocal = sel;
-  document.getElementById('local-activo-label').textContent = sel;
-  document.getElementById('movs-sub').textContent = sel;
-  selTarjeta = null;
-  document.getElementById('cpanel').style.display = 'none';
-  document.getElementById('busq').value = '';
-  document.getElementById('busq-res').innerHTML = '';
+  document.getElementById('movs-sub').textContent  = sesionLocal;
+  document.getElementById('mi-local-label').textContent = sesionLocal;
+
+  // Ir a pantalla inicial
+  const primerTab = document.getElementById(tabs[rol][0]);
+  const primerScr = tabs[rol][0].replace('ntab-','');
+  showScr(primerScr === 'op' ? 'op' : primerScr === 'mi' ? 'mi' : primerScr === 'dash' ? 'dash' : 'cfg', primerTab);
+  loadCache();
 }
 
 function doLogout() {
-  sesionLocal = ''; esAdmin = false; tarjetasCache = []; selTarjeta = null;
-  document.getElementById('pg-app').style.display   = 'none';
+  rol=''; sesionLocal=''; tarjetasCache=[]; selTarjeta=null; selRecarga=null;
+  Object.values(charts).forEach(c => { try{c.destroy();}catch(e){} });
+  charts = {};
+  document.getElementById('pg-app').style.display  = 'none';
   document.getElementById('pg-login').style.display = 'flex';
   document.getElementById('login-pass').value = '';
   document.getElementById('login-err').classList.remove('on');
 }
 
-// ═══════════════════════════════════════════════════
-//  PORTAL CLIENTE
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// PORTAL CLIENTE
+// ═══════════════════════════════════════════
 function showPortal() {
   document.getElementById('pg-login').style.display = 'none';
   document.getElementById('pg-portal').style.display = 'block';
 }
-
 function backToLogin() {
   document.getElementById('pg-portal').style.display = 'none';
   document.getElementById('pg-login').style.display  = 'flex';
-  document.getElementById('portal-dni').value        = '';
+  document.getElementById('portal-dni').value = '';
   document.getElementById('portal-result').style.display = 'none';
 }
-
 async function buscarCliente() {
   const dni = document.getElementById('portal-dni').value.trim();
-  if (!dni || dni.length < 7) { showAl('al-portal','Ingresá un DNI válido (mínimo 7 dígitos).','err'); return; }
-  if (!API) { showAl('al-portal','El sistema no está configurado aún. Contactá a Porto Gelato.','err'); return; }
-
+  if (!dni || dni.length < 7) { showAl('al-portal','Ingresá un DNI válido.','err'); return; }
+  if (!API) { showAl('al-portal','Sistema no configurado. Contactá a Porto Gelato.','err'); return; }
   const btn = document.getElementById('btn-portal');
-  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Buscando...';
-
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Buscando...';
   try {
-    const d = await apiCall({ action: 'getTarjeta', dni });
-    btn.disabled = false; btn.textContent = 'Consultar saldo';
-
-    if (!d.ok || !d.tarjeta) {
-      showAl('al-portal','No encontramos una tarjeta con ese DNI. Consultá en tu local.','err'); return;
-    }
+    const d = await apiCall({action:'getTarjeta', dni});
+    btn.disabled=false; btn.textContent='Consultar saldo';
+    if (!d.ok||!d.tarjeta) { showAl('al-portal','No encontramos una tarjeta con ese DNI.','err'); return; }
     const t   = d.tarjeta;
-    const nom = t['Titular'] || '';
-    const sal = parseFloat(t['Saldo Actual'] || 0);
-    const tot = parseFloat(t['Total Acreditado'] || 0);
-    const con = parseFloat(t['Total Consumido'] || 0);
-    const pct = tot > 0 ? Math.round(con/tot*100) : 0;
-    const fr  = t['Franquicia'] || '';
-    const movs= d.movimientos || [];
-
+    const sal = parseFloat(t['Saldo Actual']||0);
+    const tot = parseFloat(t['Total Acreditado']||0);
+    const con = parseFloat(t['Total Consumido']||0);
+    const pct = tot>0?Math.round(con/tot*100):0;
+    const movs= d.movimientos||[];
     document.getElementById('al-portal').classList.remove('on');
-    document.getElementById('portal-result').style.display = 'block';
-    document.getElementById('portal-result').innerHTML = `
+    document.getElementById('portal-result').style.display='block';
+    document.getElementById('portal-result').innerHTML=`
       <div class="saldo-big">
-        <div class="sn">${nom}</div>
+        <div class="sn">${t['Titular']||''}</div>
         <div class="sl">Saldo disponible</div>
-        <div class="sv ${sal<2000?'low':''}">${fmt(sal)}</div>
-        <div style="margin-top:10px;font-size:11px;color:#555">${fr} · Total acreditado: ${fmt(tot)} · Usado: ${pct}%</div>
+        <div class="sv ${sal<SALDO_BAJO?'low':''}">${fmt(sal)}</div>
+        <div style="margin-top:10px;font-size:11px;color:#555">${t['Franquicia']||''} · Total acreditado: ${fmt(tot)} · Usado: ${pct}%</div>
       </div>
-      ${movs.length ? `
-      <div class="movs-mini">
-        <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--g7)">Últimos movimientos</div>
-        <table>
-          <thead><tr><th>Fecha</th><th>Tipo</th><th style="text-align:right">Monto</th><th style="text-align:right">Saldo</th></tr></thead>
-          <tbody>
-            ${movs.slice(0,8).map(m=>`<tr>
-              <td class="mono" style="font-size:10px">${m['Fecha']||''}</td>
-              <td><span class="badge ${(m['Tipo']||'')==='Carga'?'bg':'br'}" style="font-size:10px">${m['Tipo']||''}</span></td>
-              <td class="mono" style="text-align:right">${fmt(parseFloat(m['Monto']||0))}</td>
-              <td class="mono" style="text-align:right">${fmt(parseFloat(m['Saldo']||0))}</td>
-            </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>` : '<div class="empty" style="padding:16px">Sin movimientos aún</div>'}
-    `;
-  } catch(e) {
-    btn.disabled = false; btn.textContent = 'Consultar saldo';
-    showAl('al-portal','Error al conectar. Intentá más tarde.','err');
-  }
+      ${movs.length?`<div class="movs-mini"><div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--g7)">Últimos movimientos</div>
+      <table><thead><tr><th>Fecha</th><th>Tipo</th><th style="text-align:right">Monto</th><th style="text-align:right">Saldo</th></tr></thead>
+      <tbody>${movs.slice(0,8).map(m=>`<tr><td class="mono" style="font-size:10px">${m['Fecha']||''}</td><td><span class="badge ${(m['Tipo']||'')==='Carga'?'bg':'br'}" style="font-size:10px">${m['Tipo']||''}</span></td><td class="mono" style="text-align:right">${fmt(parseFloat(m['Monto']||0))}</td><td class="mono" style="text-align:right">${fmt(parseFloat(m['Saldo']||0))}</td></tr>`).join('')}</tbody></table></div>`
+      :'<div class="empty" style="padding:16px">Sin movimientos aún</div>'}`;
+  } catch(e) { btn.disabled=false; btn.textContent='Consultar saldo'; showAl('al-portal','Error al conectar.','err'); }
 }
 
-// ═══════════════════════════════════════════════════
-//  NAV
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════
 function showScr(id, btn) {
-  document.querySelectorAll('.scr').forEach(e => e.classList.remove('on'));
-  document.querySelectorAll('.ntab').forEach(e => e.classList.remove('on'));
-  document.getElementById('scr-' + id).classList.add('on');
+  document.querySelectorAll('.scr').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(e=>e.classList.remove('on'));
+  document.getElementById('scr-'+id).classList.add('on');
   if (btn) btn.classList.add('on');
-  if (id === 'dash') loadDash();
+  if (id==='dash') loadDash();
+  if (id==='mi')   loadMiLocal();
 }
-
 function showTab(id, btn) {
-  document.querySelectorAll('.itab').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('.itab').forEach(e=>e.classList.remove('on'));
   btn.classList.add('on');
-  ['nueva','consumo','movs'].forEach(t =>
-    document.getElementById('tab-' + t).style.display = t === id ? 'block' : 'none');
-  activeTab = id;
-  if (id === 'movs') loadMovs();
-  if (id === 'consumo' && !tarjetasCache.length) loadCache();
+  ['nueva','recargar','consumo','movs'].forEach(t=>
+    document.getElementById('tab-'+t).style.display=t===id?'block':'none');
+  if (id==='movs') loadMovs();
+  if (id==='consumo'||id==='recargar') loadCache();
 }
 
-// ═══════════════════════════════════════════════════
-//  CONFIG
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════
 function onUrlChange() {
   API = document.getElementById('api-url').value.trim();
-  localStorage.setItem('pg_api', API);
-  setDot('','Sin verificar');
+  localStorage.setItem('pg_api_admin', API);
 }
-
 function setDot(state, label) {
-  document.getElementById('cdot').className = 'dot' + (state?' '+state:'');
-  document.getElementById('clbl').textContent = label;
-  const s = document.getElementById('cstat');
-  s.className = 'cstat' + (state?' '+state:'');
+  const dot = document.getElementById('cdot');
+  const lbl = document.getElementById('clbl');
+  dot.style.background = state==='ok'?'#22C55E':state==='err'?'#EF4444':state==='loading'?'#FFD600':'#888';
+  lbl.textContent = label;
+  lbl.style.color  = state==='ok'?'#22C55E':state==='err'?'#EF4444':'#888';
 }
-
 async function testConn() {
   if (!API) { setDot('err','Pegá la URL primero'); return; }
   setDot('loading','Conectando...');
   try {
     const d = await apiCall({action:'getTarjetas'});
-    if (d.ok !== undefined) {
-      tarjetasCache = d.tarjetas || [];
-      setDot('ok','Conectado (' + tarjetasCache.length + ' tarjetas)');
-    } else { setDot('err','Respuesta inesperada'); }
+    if (d.ok!==undefined) { tarjetasCache=d.tarjetas||[]; setDot('ok','Conectado ('+tarjetasCache.length+' tarjetas)'); }
+    else setDot('err','Respuesta inesperada');
   } catch(e) { setDot('err','Error de conexión'); }
 }
 
-// ═══════════════════════════════════════════════════
-//  NUEVA TARJETA
-// ═══════════════════════════════════════════════════
-function updNueva() {
-  const dni = document.getElementById('n-dni').value.trim();
-  const m   = parseFloat(document.getElementById('n-monto').value) || 0;
-  const p   = bonusPct(m);
-  const b   = m * p;
-  const t   = m + b;
-  document.getElementById('n-id').value = dni || '';
-  document.getElementById('n-tot').textContent = m > 0 ? fmt(t) : '$0';
-  document.getElementById('n-bdet').textContent = m > 0
-    ? fmt(m) + ' + ' + (p*100) + '% bonus = ' + fmt(b) + ' extra'
-    : 'Ingresá un monto para ver el bonus';
+// ═══════════════════════════════════════════
+// ADMIN CAMBIA LOCAL
+// ═══════════════════════════════════════════
+function adminCambiaLocal() {
+  sesionLocal = document.getElementById('admin-local-sel').value;
+  document.getElementById('movs-sub').textContent = sesionLocal;
+  document.getElementById('mi-local-label').textContent = sesionLocal;
+  selTarjeta=null; selRecarga=null;
+  document.getElementById('cpanel').style.display='none';
+  document.getElementById('rec-panel').style.display='none';
+  ['busq','busq-rec'].forEach(id=>document.getElementById(id).value='');
+  ['busq-res','busq-rec-res'].forEach(id=>document.getElementById(id).innerHTML='');
 }
 
-async function darAlta() {
-  const dni   = document.getElementById('n-dni').value.trim();
-  const nom   = document.getElementById('n-nom').value.trim();
-  const tel   = document.getElementById('n-tel').value.trim();
-  const monto = parseFloat(document.getElementById('n-monto').value);
-  if (!dni || dni.length < 7) { showAl('al-nueva','Ingresá el DNI del titular (mínimo 7 dígitos).','err'); return; }
-  if (!nom)                   { showAl('al-nueva','Ingresá el nombre del titular.','err'); return; }
-  if (!monto || monto < 1000) { showAl('al-nueva','Monto mínimo $1.000.','err'); return; }
-  if (!API)                   { showAl('al-nueva','Configurá la URL de Apps Script primero.','err'); return; }
-
-  // Verificar que no exista ya ese DNI
-  const existe = tarjetasCache.find(t => String(t['ID']||t.id) === dni);
-  if (existe) { showAl('al-nueva','Ya existe una tarjeta con ese DNI. Buscala en "Registrar consumo".','err'); return; }
-
-  const p     = bonusPct(monto);
-  const bonus = monto * p;
-  const total = monto + bonus;
-
-  setBtnL('btn-alta', true);
-  try {
-    const r = await postApi({ action:'nuevaTarjeta', id:dni, nombre:nom, tel,
-      franquicia:sesionLocal, fecha:toDay(), cargado:monto, bonusPct:p, bonus, total });
-    if (!r.ok) { showAl('al-nueva', r.error||'Error al guardar.','err'); return; }
-  } catch(e) { showAl('al-nueva','Sin conexión. Revisá la URL.','err'); return; }
-  finally    { setBtnL('btn-alta', false, 'Confirmar y dar de alta'); }
-
-  tarjetasCache.push({ 'ID':dni, 'Titular':nom, 'Teléfono':tel, 'Franquicia':sesionLocal,
-    'Monto Cargado':monto, 'Total Acreditado':total, 'Total Consumido':0, 'Saldo Actual':total, 'Estado':'Activa' });
-
-  showAl('al-nueva', `Tarjeta DNI ${dni} creada — Saldo: ${fmt(total)}`,'ok');
-  ['n-dni','n-nom','n-tel','n-monto'].forEach(x => document.getElementById(x).value = '');
-  document.getElementById('n-id').value = '';
-  document.getElementById('n-tot').textContent = '$0';
-  document.getElementById('n-bdet').textContent = 'Ingresá un monto para ver el bonus';
-}
-
-// ═══════════════════════════════════════════════════
-//  BUSCAR / CONSUMO
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// CACHE
+// ═══════════════════════════════════════════
 async function loadCache() {
-  if (!API || tarjetasCache.length) return;
+  if (!API) return;
   try {
     const d = await apiCall({action:'getTarjetas'});
-    if (d.ok) tarjetasCache = d.tarjetas || [];
+    if (d.ok) tarjetasCache = d.tarjetas||[];
   } catch(e) {}
 }
 
-function buscar() {
-  const q   = document.getElementById('busq').value.trim().toLowerCase();
-  const res = document.getElementById('busq-res');
-  if (q.length < 2) { res.innerHTML=''; return; }
+// ═══════════════════════════════════════════
+// NUEVA TARJETA
+// ═══════════════════════════════════════════
+function updNueva() {
+  const dni = document.getElementById('n-dni').value.trim();
+  const m   = parseFloat(document.getElementById('n-monto').value)||0;
+  const p   = bonusPct(m); const b=m*p; const t=m+b;
+  document.getElementById('n-id').value = dni||'';
+  document.getElementById('n-tot').textContent = m>0?fmt(t):'$0';
+  document.getElementById('n-bdet').textContent = m>0?`${fmt(m)} + ${p*100}% bonus = ${fmt(b)} extra`:'Ingresá un monto para ver el bonus';
+}
+async function darAlta() {
+  const dni=document.getElementById('n-dni').value.trim();
+  const nom=document.getElementById('n-nom').value.trim();
+  const tel=document.getElementById('n-tel').value.trim();
+  const monto=parseFloat(document.getElementById('n-monto').value);
+  if (!dni||dni.length<7) { showAl('al-nueva','Ingresá el DNI (mínimo 7 dígitos).','err'); return; }
+  if (!nom)               { showAl('al-nueva','Ingresá el nombre del titular.','err'); return; }
+  if (!monto||monto<1000) { showAl('al-nueva','Monto mínimo $1.000.','err'); return; }
+  if (!API)               { showAl('al-nueva','Configurá la URL de Apps Script en Config.','err'); return; }
+  const existe = tarjetasCache.find(t=>String(t['ID']||t.id)===dni);
+  if (existe)             { showAl('al-nueva','Ya existe una tarjeta con ese DNI. Usá "Recargar saldo".','err'); return; }
+  const p=bonusPct(monto); const bonus=monto*p; const total=monto+bonus;
+  setBtnL('btn-alta',true);
+  try {
+    const r=await postApi({action:'nuevaTarjeta',id:dni,nombre:nom,tel,franquicia:sesionLocal,fecha:toDay(),cargado:monto,bonusPct:p,bonus,total});
+    if (!r.ok) { showAl('al-nueva',r.error||'Error al guardar.','err'); return; }
+  } catch(e) { showAl('al-nueva','Sin conexión.','err'); return; }
+  finally { setBtnL('btn-alta',false,'Confirmar y dar de alta'); }
+  tarjetasCache.push({'ID':dni,'Titular':nom,'Teléfono':tel,'Franquicia':sesionLocal,'Monto Cargado':monto,'Total Acreditado':total,'Total Consumido':0,'Saldo Actual':total,'Estado':'Activa'});
+  showAl('al-nueva',`Tarjeta DNI ${dni} creada — Saldo: ${fmt(total)}`,'ok');
+  ['n-dni','n-nom','n-tel','n-monto'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('n-id').value='';
+  document.getElementById('n-tot').textContent='$0';
+  document.getElementById('n-bdet').textContent='Ingresá un monto para ver el bonus';
+}
 
-  const gI  = t => String(t['ID']  ||t.id  ||'');
-  const gN  = t => String(t['Titular']||t.nombre||'');
-  const gF  = t => String(t['Franquicia']||t.franquicia||'');
-  const gT  = t => String(t['Teléfono']||t.tel||'');
-  const gS  = t => parseFloat(t['Saldo Actual']??t.saldo??0);
-  const act = t => t['Estado']!=='Agotada' && t.activa!==false;
-
-  const matches = tarjetasCache.filter(t => {
-    const enFr = esAdmin || gF(t) === sesionLocal;
-    return act(t) && enFr && (gN(t).toLowerCase().includes(q)||gI(t).includes(q)||gT(t).includes(q));
+// ═══════════════════════════════════════════
+// RECARGA DE SALDO
+// ═══════════════════════════════════════════
+function buscarParaRecargar() {
+  const q=document.getElementById('busq-rec').value.trim().toLowerCase();
+  const res=document.getElementById('busq-rec-res');
+  if (q.length<2) { res.innerHTML=''; return; }
+  const matches=tarjetasCache.filter(t=>{
+    const fr=String(t['Franquicia']||t.franquicia||'');
+    const enFr = rol==='admin' ? true : fr===sesionLocal;
+    const act=t['Estado']!=='Agotada'&&t.activa!==false;
+    const nom=String(t['Titular']||t.nombre||'').toLowerCase();
+    const id=String(t['ID']||t.id||'');
+    const tel=String(t['Teléfono']||t.tel||'');
+    return act&&enFr&&(nom.includes(q)||id.includes(q)||tel.includes(q));
   });
-
   if (!matches.length) { res.innerHTML='<div class="empty">Sin resultados</div>'; return; }
-  res.innerHTML = matches.slice(0,8).map(t=>`
-    <div onclick="selCard('${gI(t)}')" style="padding:10px 12px;border:1.5px solid var(--g2);border-radius:8px;cursor:pointer;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;background:var(--wh);transition:border-color .15s" onmouseover="this.style.borderColor='#FFD600'" onmouseout="this.style.borderColor='var(--g2)'">
-      <div><div style="font-size:14px;font-weight:600">${gN(t)}</div><div style="font-size:11px;color:var(--g5);font-family:'DM Mono',monospace">DNI ${gI(t)} · ${gF(t)}</div></div>
-      <div style="text-align:right"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:600;color:${gS(t)<2000?'var(--rd)':'var(--bk)'}">${fmt(gS(t))}</div><div style="font-size:10px;color:var(--g5)">saldo</div></div>
+  res.innerHTML=matches.slice(0,6).map(t=>`
+    <div onclick="selCardRec('${t['ID']||t.id}')" style="padding:10px 12px;border:1.5px solid var(--g2);border-radius:8px;cursor:pointer;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;background:var(--wh)" onmouseover="this.style.borderColor='#FFD600'" onmouseout="this.style.borderColor='var(--g2)'">
+      <div><div style="font-size:14px;font-weight:600">${t['Titular']||t.nombre||''}</div><div style="font-size:11px;color:var(--g5);font-family:'DM Mono',monospace">DNI ${t['ID']||t.id||''}</div></div>
+      <div style="text-align:right"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:600">${fmt(parseFloat(t['Saldo Actual']??t.saldo??0))}</div><div style="font-size:10px;color:var(--g5)">saldo</div></div>
     </div>`).join('');
 }
+function selCardRec(id) {
+  selRecarga=tarjetasCache.find(t=>String(t['ID']||t.id)===String(id));
+  if (!selRecarga) return;
+  document.getElementById('busq-rec-res').innerHTML='';
+  document.getElementById('busq-rec').value=selRecarga['Titular']||selRecarga.nombre||'';
+  const sal=parseFloat(selRecarga['Saldo Actual']??selRecarga.saldo??0);
+  document.getElementById('rec-ccard-html').innerHTML=`
+    <div class="ccard"><div class="cn">${selRecarga['Titular']||''}</div>
+    <div class="ci">DNI ${selRecarga['ID']||''} · ${selRecarga['Teléfono']||'sin tel'}</div>
+    <div class="sl">Saldo actual</div><div class="sv ${sal<SALDO_BAJO?'low':''}">${fmt(sal)}</div>
+    <div class="ftag">${selRecarga['Franquicia']||''}</div></div>`;
+  document.getElementById('rec-panel').style.display='block';
+  ['rec-monto','rec-nuevo'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('rec-tot').textContent='$0';
+  document.getElementById('rec-bdet').textContent='Ingresá el monto';
+}
+function updRecarga() {
+  if (!selRecarga) return;
+  const m=parseFloat(document.getElementById('rec-monto').value)||0;
+  const p=bonusPct(m); const b=m*p; const cr=m+b;
+  const sal=parseFloat(selRecarga['Saldo Actual']??selRecarga.saldo??0);
+  document.getElementById('rec-tot').textContent=m>0?fmt(cr):'$0';
+  document.getElementById('rec-bdet').textContent=m>0?`${fmt(m)} + ${p*100}% bonus = ${fmt(b)} extra`:'Ingresá el monto';
+  document.getElementById('rec-nuevo').value=m>0?fmt(sal+cr):'';
+}
+async function regRecarga() {
+  if (!selRecarga) return;
+  const monto=parseFloat(document.getElementById('rec-monto').value);
+  if (!monto||monto<1000) { showAl('al-rec','Monto mínimo $1.000.','err'); return; }
+  if (!API) { showAl('al-rec','Configurá la URL de Apps Script.','err'); return; }
+  const p=bonusPct(monto); const bonus=monto*p; const credito=monto+bonus;
+  const tid=String(selRecarga['ID']||selRecarga.id);
+  setBtnL('btn-rec',true);
+  try {
+    const r=await postApi({action:'recargarSaldo',tid,monto,bonusPct:p,bonus,credito});
+    if (!r.ok) { showAl('al-rec',r.error||'Error al guardar.','err'); return; }
+  } catch(e) { showAl('al-rec','Sin conexión.','err'); return; }
+  finally { setBtnL('btn-rec',false,'Confirmar recarga'); }
+  const t=tarjetasCache.find(x=>String(x['ID']||x.id)===tid);
+  if (t) {
+    t['Monto Cargado']=(parseFloat(t['Monto Cargado'])||0)+monto;
+    t['Total Acreditado']=(parseFloat(t['Total Acreditado'])||0)+credito;
+    t['Saldo Actual']=(parseFloat(t['Saldo Actual'])||0)+credito;
+    t['Estado']='Activa'; selRecarga=t;
+  }
+  const salNuevo=parseFloat(t?.['Saldo Actual']??0);
+  showAl('al-rec',`Recarga registrada. Saldo nuevo: ${fmt(salNuevo)}`,'ok');
+  document.getElementById('rec-ccard-html').innerHTML=`
+    <div class="ccard"><div class="cn">${selRecarga['Titular']||''}</div>
+    <div class="ci">DNI ${selRecarga['ID']||''} · ${selRecarga['Teléfono']||'sin tel'}</div>
+    <div class="sl">Saldo actual</div><div class="sv">${fmt(salNuevo)}</div>
+    <div class="ftag">${selRecarga['Franquicia']||''}</div></div>`;
+  ['rec-monto','rec-nuevo'].forEach(x=>document.getElementById(x).value='');
+}
 
+// ═══════════════════════════════════════════
+// CONSUMO
+// ═══════════════════════════════════════════
+function buscar() {
+  const q=document.getElementById('busq').value.trim().toLowerCase();
+  const res=document.getElementById('busq-res');
+  if (q.length<2) { res.innerHTML=''; return; }
+  const gI=t=>String(t['ID']||t.id||'');
+  const gN=t=>String(t['Titular']||t.nombre||'');
+  const gF=t=>String(t['Franquicia']||t.franquicia||'');
+  const gS=t=>parseFloat(t['Saldo Actual']??t.saldo??0);
+  const act=t=>t['Estado']!=='Agotada'&&t.activa!==false;
+  const matches=tarjetasCache.filter(t=>act(t)&&gF(t)===sesionLocal&&(gN(t).toLowerCase().includes(q)||gI(t).includes(q)||String(t['Teléfono']||'').includes(q)));
+  if (!matches.length) { res.innerHTML='<div class="empty">Sin resultados en este local</div>'; return; }
+  res.innerHTML=matches.slice(0,8).map(t=>`
+    <div onclick="selCard('${gI(t)}')" style="padding:10px 12px;border:1.5px solid var(--g2);border-radius:8px;cursor:pointer;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;background:var(--wh)" onmouseover="this.style.borderColor='#FFD600'" onmouseout="this.style.borderColor='var(--g2)'">
+      <div><div style="font-size:14px;font-weight:600">${gN(t)}</div><div style="font-size:11px;color:var(--g5);font-family:'DM Mono',monospace">DNI ${gI(t)} · ${gF(t)}</div></div>
+      <div style="text-align:right"><div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:600;color:${gS(t)<SALDO_BAJO?'var(--rd)':'var(--bk)'}">${fmt(gS(t))}</div><div style="font-size:10px;color:var(--g5)">saldo</div></div>
+    </div>`).join('');
+}
 function selCard(id) {
-  selTarjeta = tarjetasCache.find(t => String(t['ID']||t.id) === String(id));
+  selTarjeta=tarjetasCache.find(t=>String(t['ID']||t.id)===String(id));
   if (!selTarjeta) return;
-  document.getElementById('busq-res').innerHTML = '';
-  document.getElementById('busq').value = selTarjeta['Titular']||selTarjeta.nombre||'';
+  document.getElementById('busq-res').innerHTML='';
+  document.getElementById('busq').value=selTarjeta['Titular']||selTarjeta.nombre||'';
+  const sal=parseFloat(selTarjeta['Saldo Actual']??selTarjeta.saldo??0);
+  document.getElementById('alerta-saldo-bajo').className='alert-saldo-bajo'+(sal<SALDO_BAJO?' on':'');
   renderCCard();
-  document.getElementById('cpanel').style.display = 'block';
-  ['c-monto','c-prev','c-det'].forEach(x => document.getElementById(x).value = '');
+  document.getElementById('cpanel').style.display='block';
+  ['c-monto','c-prev','c-det'].forEach(x=>document.getElementById(x).value='');
 }
-
 function renderCCard() {
-  const t   = selTarjeta;
-  const nom = t['Titular']||t.nombre||'';
-  const id  = t['ID']||t.id||'';
-  const tel = t['Teléfono']||t.tel||'sin tel';
-  const fr  = t['Franquicia']||t.franquicia||'';
-  const tot = parseFloat(t['Total Acreditado']??t.total??0);
-  const con = parseFloat(t['Total Consumido']??t.consumido??0);
-  const sal = parseFloat(t['Saldo Actual']??t.saldo??0);
-  const pct = tot > 0 ? Math.round(con/tot*100) : 0;
-  document.getElementById('ccard-html').innerHTML = `
-    <div class="ccard">
-      <div class="cn">${nom}</div>
-      <div class="ci">DNI ${id} · ${tel}</div>
-      <div class="sl">Saldo disponible</div>
-      <div class="sv ${sal<2000?'low':''}">${fmt(sal)}</div>
-      <div class="si">Total acreditado: ${fmt(tot)} · Consumido: ${pct}%</div>
-      <div class="ftag">${fr}</div>
-    </div>`;
+  const t=selTarjeta;
+  const sal=parseFloat(t['Saldo Actual']??t.saldo??0);
+  const tot=parseFloat(t['Total Acreditado']??t.total??0);
+  const con=parseFloat(t['Total Consumido']??t.consumido??0);
+  const pct=tot>0?Math.round(con/tot*100):0;
+  document.getElementById('ccard-html').innerHTML=`
+    <div class="ccard"><div class="cn">${t['Titular']||t.nombre||''}</div>
+    <div class="ci">DNI ${t['ID']||t.id||''} · ${t['Teléfono']||t.tel||'sin tel'}</div>
+    <div class="sl">Saldo disponible</div>
+    <div class="sv ${sal<SALDO_BAJO?'low':''}">${fmt(sal)}</div>
+    <div class="si">Total acreditado: ${fmt(tot)} · Consumido: ${pct}%</div>
+    <div class="ftag">${t['Franquicia']||t.franquicia||''}</div></div>`;
 }
-
 function prevCons() {
   if (!selTarjeta) return;
-  const m   = parseFloat(document.getElementById('c-monto').value)||0;
-  const sal = parseFloat(selTarjeta['Saldo Actual']??selTarjeta.saldo??0);
-  const nvo = sal - m;
-  document.getElementById('c-prev').value = m>0 ? fmt(Math.max(0,nvo)) : '';
-  document.getElementById('c-prev').style.color = nvo<0?'var(--rd)':'var(--bk)';
+  const m=parseFloat(document.getElementById('c-monto').value)||0;
+  const sal=parseFloat(selTarjeta['Saldo Actual']??selTarjeta.saldo??0);
+  const nvo=sal-m;
+  document.getElementById('c-prev').value=m>0?fmt(Math.max(0,nvo)):'';
+  document.getElementById('c-prev').style.color=nvo<0?'var(--rd)':'var(--bk)';
 }
-
 async function regCons() {
   if (!selTarjeta) return;
-  const monto = parseFloat(document.getElementById('c-monto').value);
-  const det   = document.getElementById('c-det').value.trim();
-  const sal   = parseFloat(selTarjeta['Saldo Actual']??selTarjeta.saldo??0);
+  const monto=parseFloat(document.getElementById('c-monto').value);
+  const det=document.getElementById('c-det').value.trim();
+  const sal=parseFloat(selTarjeta['Saldo Actual']??selTarjeta.saldo??0);
   if (!monto||monto<=0) { showAl('al-cons','Ingresá un monto válido.','err'); return; }
   if (monto>sal)        { showAl('al-cons','Saldo insuficiente. Saldo: '+fmt(sal),'err'); return; }
   if (!API)             { showAl('al-cons','Configurá la URL de Apps Script.','err'); return; }
-
-  const tid = String(selTarjeta['ID']||selTarjeta.id);
-  setBtnL('btn-cons', true);
+  const tid=String(selTarjeta['ID']||selTarjeta.id);
+  setBtnL('btn-cons',true);
   try {
-    const r = await postApi({ action:'registrarConsumo', tid, monto, detalle:det });
-    if (!r.ok) { showAl('al-cons', r.error||'Error al guardar.','err'); return; }
+    const r=await postApi({action:'registrarConsumo',tid,monto,detalle:det});
+    if (!r.ok) { showAl('al-cons',r.error||'Error al guardar.','err'); return; }
   } catch(e) { showAl('al-cons','Sin conexión.','err'); return; }
-  finally    { setBtnL('btn-cons', false, 'Confirmar consumo'); }
-
-  const t = tarjetasCache.find(x => String(x['ID']||x.id) === tid);
+  finally { setBtnL('btn-cons',false,'Confirmar consumo'); }
+  const t=tarjetasCache.find(x=>String(x['ID']||x.id)===tid);
   if (t) {
-    t['Total Consumido'] = (parseFloat(t['Total Consumido'])||0) + monto;
-    t['Saldo Actual']    = Math.max(0, sal - monto);
+    t['Total Consumido']=(parseFloat(t['Total Consumido'])||0)+monto;
+    t['Saldo Actual']=Math.max(0,sal-monto);
     if (t['Saldo Actual']<=0) t['Estado']='Agotada';
-    selTarjeta = t;
+    selTarjeta=t;
   }
-  showAl('al-cons',`Consumo registrado. Saldo restante: ${fmt(Math.max(0,sal-monto))}`,'ok');
+  const salNvo=Math.max(0,sal-monto);
+  document.getElementById('alerta-saldo-bajo').className='alert-saldo-bajo'+(salNvo<SALDO_BAJO?' on':'');
+  showAl('al-cons',`Consumo registrado. Saldo restante: ${fmt(salNvo)}`,'ok');
   renderCCard();
-  ['c-monto','c-prev','c-det'].forEach(x => document.getElementById(x).value='');
+  ['c-monto','c-prev','c-det'].forEach(x=>document.getElementById(x).value='');
 }
 
-// ═══════════════════════════════════════════════════
-//  MOVIMIENTOS
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// MOVIMIENTOS LOCAL
+// ═══════════════════════════════════════════
 async function loadMovs() {
-  const body = document.getElementById('movs-body');
-  const spin = document.getElementById('movs-spin');
-  if (!API) { body.innerHTML='<tr><td colspan="6" class="empty">Configurá la URL de Apps Script</td></tr>'; return; }
+  const body=document.getElementById('movs-body');
+  const spin=document.getElementById('movs-spin');
+  if (!API) { body.innerHTML='<tr><td colspan="7" class="empty">Configurá la URL en Config</td></tr>'; return; }
   spin.style.display='inline-block';
   try {
-    const d = await apiCall({action:'getMovimientos'});
+    const d=await apiCall({action:'getMovimientos'});
     spin.style.display='none';
-    if (!d.ok||!d.movimientos.length) { body.innerHTML='<tr><td colspan="6" class="empty">Sin movimientos aún</td></tr>'; return; }
-    const lista = esAdmin ? d.movimientos : d.movimientos.filter(m=>(m['Franquicia']||m.franquicia)===sesionLocal);
-    body.innerHTML = lista.slice(0,50).map(m=>{
+    if (!d.ok||!d.movimientos.length) { body.innerHTML='<tr><td colspan="7" class="empty">Sin movimientos aún</td></tr>'; return; }
+    const lista=d.movimientos.filter(m=>(m['Franquicia']||m.franquicia)===sesionLocal);
+    body.innerHTML=lista.slice(0,50).map(m=>{
       const tipo=m['Tipo']||m.tipo||'';
-      return `<tr>
-        <td class="mono" style="font-size:11px">${m['Fecha']||''} ${m['Hora']||''}</td>
-        <td class="mono">${m['ID Tarjeta']||''}</td>
-        <td>${m['Titular']||m.nombre||''}</td>
-        <td><span class="badge ${tipo==='Carga'?'bg':'br'}">${tipo}</span></td>
-        <td class="mono" style="text-align:right">${fmt(parseFloat(m['Monto']||0))}</td>
-        <td class="mono" style="text-align:right">${fmt(parseFloat(m['Saldo']||0))}</td>
-      </tr>`;
-    }).join('');
-  } catch(e) { spin.style.display='none'; body.innerHTML='<tr><td colspan="6" class="empty">Error al cargar</td></tr>'; }
+      return `<tr><td class="mono" style="font-size:11px">${m['Fecha']||''}</td><td class="mono" style="font-size:11px">${m['Hora']||''}</td><td class="mono">${m['ID Tarjeta']||''}</td><td>${m['Titular']||m.nombre||''}</td><td><span class="badge ${tipo==='Carga'?'bg':tipo==='Recarga'?'bbl':'br'}">${tipo}</span></td><td class="mono" style="text-align:right">${fmt(parseFloat(m['Monto']||0))}</td><td class="mono" style="text-align:right">${fmt(parseFloat(m['Saldo']||0))}</td></tr>`;
+    }).join('')||'<tr><td colspan="7" class="empty">Sin movimientos en este local</td></tr>';
+  } catch(e) { spin.style.display='none'; body.innerHTML='<tr><td colspan="7" class="empty">Error al cargar</td></tr>'; }
 }
 
-// ═══════════════════════════════════════════════════
-//  DASHBOARD
-// ═══════════════════════════════════════════════════
-async function loadDash() {
-  const spin = document.getElementById('dash-spin');
-  if (!API) { clearDash('Configurá la URL de Apps Script'); return; }
+// ═══════════════════════════════════════════
+// MI LOCAL
+// ═══════════════════════════════════════════
+async function loadMiLocal() {
+  const spin=document.getElementById('mi-spin');
+  if (!API) return;
   spin.style.display='inline-block';
   try {
-    const [rT,rM] = await Promise.all([
-      apiCall({action:'getTarjetas'}),
-      apiCall({action:'getMovimientos'})
-    ]);
+    const d=await apiCall({action:'getTarjetas'});
     spin.style.display='none';
-    const ts = rT.ok ? (rT.tarjetas||[]) : [];
-    tarjetasCache = ts;
+    if (!d.ok) return;
+    tarjetasCache=d.tarjetas||[];
+    const local=sesionLocal;
+    const ts=tarjetasCache.filter(t=>(t['Franquicia']||t.franquicia)===local);
+    const act=ts.filter(t=>t['Estado']!=='Agotada').length;
+    const carg=ts.reduce((s,t)=>s+parseFloat(t['Monto Cargado']||0),0);
+    const cons=ts.reduce((s,t)=>s+parseFloat(t['Total Consumido']||0),0);
+    const sald=ts.reduce((s,t)=>s+parseFloat(t['Saldo Actual']||0),0);
+    document.getElementById('mi-act').textContent=act;
+    document.getElementById('mi-carg').textContent=fmt(carg);
+    document.getElementById('mi-cons').textContent=fmt(cons);
+    document.getElementById('mi-sald').textContent=fmt(sald);
+    document.getElementById('mi-local-label').textContent=local;
+    const tbody=document.getElementById('mi-tbody');
+    tbody.innerHTML=ts.length?ts.map(t=>`<tr>
+      <td class="mono">${t['ID']||''}</td>
+      <td style="font-weight:500">${t['Titular']||''}</td>
+      <td class="mono" style="font-size:11px">${t['Teléfono']||''}</td>
+      <td class="mono" style="text-align:right">${fmt(parseFloat(t['Monto Cargado']||0))}</td>
+      <td class="mono" style="text-align:right">${fmt(parseFloat(t['Total Consumido']||0))}</td>
+      <td class="mono" style="text-align:right;font-weight:700;color:${parseFloat(t['Saldo Actual']||0)<SALDO_BAJO?'var(--rd)':'var(--bk)'}">${fmt(parseFloat(t['Saldo Actual']||0))}</td>
+      <td><span class="badge ${t['Estado']==='Activa'?'bg':'br'}">${t['Estado']||''}</span></td>
+    </tr>`).join(''):'<tr><td colspan="7" class="empty">Sin tarjetas en este local</td></tr>';
+  } catch(e) { spin.style.display='none'; }
+}
 
-    document.getElementById('d-act').textContent  = ts.filter(t=>t['Estado']!=='Agotada'&&t.activa!==false).length;
-    document.getElementById('d-carg').textContent = fmt(ts.reduce((s,t)=>s+parseFloat(t['Monto Cargado']||0),0));
-    document.getElementById('d-cons').textContent = fmt(ts.reduce((s,t)=>s+parseFloat(t['Total Consumido']||0),0));
-    document.getElementById('d-sald').textContent = fmt(ts.reduce((s,t)=>s+parseFloat(t['Saldo Actual']||0),0));
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+async function loadDash() {
+  const spin=document.getElementById('dash-spin');
+  if (!API) { clearDash('Configurá la URL en Config'); return; }
+  spin.style.display='inline-block';
+  try {
+    const [rT,rM]=await Promise.all([apiCall({action:'getTarjetas'}),apiCall({action:'getMovimientos'})]);
+    spin.style.display='none';
+    const ts=rT.ok?(rT.tarjetas||[]):[];
+    tarjetasCache=ts;
+    document.getElementById('d-act').textContent=ts.filter(t=>t['Estado']!=='Agotada').length;
+    document.getElementById('d-carg').textContent=fmt(ts.reduce((s,t)=>s+parseFloat(t['Monto Cargado']||0),0));
+    document.getElementById('d-cons').textContent=fmt(ts.reduce((s,t)=>s+parseFloat(t['Total Consumido']||0),0));
+    document.getElementById('d-sald').textContent=fmt(ts.reduce((s,t)=>s+parseFloat(t['Saldo Actual']||0),0));
 
-    const franqs = ['Porto Gelato - Av. España','Porto Gelato - Banda Norte','Porto Gelato - Jovita','Porto Gelato - Carpinteria','Porto Gelato - Merlo'];
-    const rows = franqs.map(fr=>{
-      const fts = ts.filter(t=>(t['Franquicia']||t.franquicia)===fr);
-      if (!fts.length) return null;
-      const carg = fts.reduce((s,t)=>s+parseFloat(t['Monto Cargado']||0),0);
-      const totA = fts.reduce((s,t)=>s+parseFloat(t['Total Acreditado']||0),0);
-      const cons = fts.reduce((s,t)=>s+parseFloat(t['Total Consumido']||0),0);
-      const sald = fts.reduce((s,t)=>s+parseFloat(t['Saldo Actual']||0),0);
-      const pct  = totA>0?Math.round(cons/totA*100):0;
-      const act  = fts.filter(t=>t['Estado']!=='Agotada'&&t.activa!==false).length;
-      return `<tr>
-        <td style="font-weight:600">${fr}</td>
-        <td><span class="badge by">${act}</span></td>
-        <td class="mono" style="text-align:right">${fmt(carg)}</td>
-        <td class="mono" style="text-align:right">${fmt(cons)}</td>
-        <td class="mono" style="text-align:right;font-weight:700">${fmt(sald)}</td>
-        <td><span class="mono">${pct}%</span><span class="pbr"><span class="pbf" style="width:${pct}%"></span></span></td>
-      </tr>`;
-    }).filter(Boolean);
-    document.getElementById('dash-body').innerHTML = rows.length?rows.join(''):'<tr><td colspan="6" class="empty">Sin tarjetas aún</td></tr>';
+    const data=FRANQS.map(fr=>{
+      const fts=ts.filter(t=>(t['Franquicia']||t.franquicia)===fr);
+      const carg=fts.reduce((s,t)=>s+parseFloat(t['Monto Cargado']||0),0);
+      const totA=fts.reduce((s,t)=>s+parseFloat(t['Total Acreditado']||0),0);
+      const cons=fts.reduce((s,t)=>s+parseFloat(t['Total Consumido']||0),0);
+      const sald=fts.reduce((s,t)=>s+parseFloat(t['Saldo Actual']||0),0);
+      const act=fts.filter(t=>t['Estado']!=='Agotada').length;
+      const pct=totA>0?Math.round(cons/totA*100):0;
+      return {fr,carg,cons,sald,act,pct,total:totA};
+    });
 
-    const movs = rM.ok?(rM.movimientos||[]):[];
-    document.getElementById('glob-body').innerHTML = movs.slice(0,25).map(m=>{
+    // Tabla resumen
+    const tbody=document.getElementById('dash-body');
+    tbody.innerHTML=data.filter(d=>d.total>0).map(d=>`<tr>
+      <td style="font-weight:600">${d.fr}</td>
+      <td><span class="badge by">${d.act}</span></td>
+      <td class="mono" style="text-align:right">${fmt(d.carg)}</td>
+      <td class="mono" style="text-align:right">${fmt(d.cons)}</td>
+      <td class="mono" style="text-align:right;font-weight:700">${fmt(d.sald)}</td>
+      <td><span class="mono">${d.pct}%</span><span class="pbr"><span class="pbf" style="width:${d.pct}%"></span></span></td>
+    </tr>`).join('')||'<tr><td colspan="6" class="empty">Sin tarjetas aún</td></tr>';
+
+    // Movimientos globales
+    const movs=rM.ok?(rM.movimientos||[]):[];
+    document.getElementById('glob-body').innerHTML=movs.slice(0,25).map(m=>{
       const tipo=m['Tipo']||m.tipo||'';
-      return `<tr>
-        <td class="mono" style="font-size:11px">${m['Fecha']||''}</td>
-        <td style="font-size:12px;color:var(--g7)">${m['Franquicia']||''}</td>
-        <td class="mono">${m['ID Tarjeta']||''}</td>
-        <td>${m['Titular']||''}</td>
-        <td><span class="badge ${tipo==='Carga'?'bg':'br'}">${tipo}</span></td>
-        <td class="mono" style="text-align:right">${fmt(parseFloat(m['Monto']||0))}</td>
-      </tr>`;
+      return `<tr><td class="mono" style="font-size:11px">${m['Fecha']||''}</td><td style="font-size:12px;color:var(--g7)">${m['Franquicia']||''}</td><td class="mono">${m['ID Tarjeta']||''}</td><td>${m['Titular']||''}</td><td><span class="badge ${tipo==='Carga'?'bg':tipo==='Recarga'?'bbl':'br'}">${tipo}</span></td><td class="mono" style="text-align:right">${fmt(parseFloat(m['Monto']||0))}</td></tr>`;
     }).join('')||'<tr><td colspan="6" class="empty">Sin movimientos</td></tr>';
 
+    // Ranking
+    const sorted=[...data].sort((a,b)=>b.carg-a.carg);
+    const maxCarg=sorted[0]?.carg||1;
+    const maxAct=Math.max(...data.map(d=>d.act))||1;
+    document.getElementById('ranking-wrap').innerHTML=sorted.map((d,i)=>`
+      <div class="rank-item">
+        <div class="rank-num rank-${i<3?i+1:'n'}">${i+1}</div>
+        <div class="rank-name">${d.fr.replace('Porto Gelato - ','')}</div>
+        <div class="rank-bars">
+          <div class="rank-bar-row"><span style="width:70px">Cargado</span><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${d.carg/maxCarg*100}%;background:var(--y)"></div></div><span>${fmt(d.carg)}</span></div>
+          <div class="rank-bar-row"><span style="width:70px">Tarjetas</span><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${d.act/maxAct*100}%;background:var(--bl)"></div></div><span>${d.act}</span></div>
+          <div class="rank-bar-row"><span style="width:70px">% consumo</span><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${d.pct}%;background:var(--gn)"></div></div><span>${d.pct}%</span></div>
+        </div>
+      </div>`).join('');
+
+    // Gráficos
+    const labels=data.map(d=>d.fr.replace('Porto Gelato - ',''));
+    renderChart('chart-cargado','bar',labels,data.map(d=>d.carg),'Saldo cargado','#FFD600');
+    renderChart('chart-activas','doughnut',labels,data.map(d=>d.act),'Tarjetas activas',['#FFD600','#1A1A1A','#22C55E','#3B82F6','#F97316']);
+
   } catch(e) { spin.style.display='none'; clearDash('Error al conectar'); }
+}
+
+function renderChart(id, type, labels, dataArr, label, color) {
+  const ctx=document.getElementById(id);
+  if (!ctx) return;
+  if (charts[id]) { charts[id].destroy(); }
+  charts[id]=new Chart(ctx,{
+    type,
+    data:{
+      labels,
+      datasets:[{
+        label,
+        data:dataArr,
+        backgroundColor: Array.isArray(color)?color:color,
+        borderColor: type==='bar'?'#E6C200':undefined,
+        borderWidth: type==='bar'?1:2,
+        borderRadius: type==='bar'?6:undefined,
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:type!=='bar',position:'bottom',labels:{font:{size:11},padding:12}}},
+      scales: type==='bar'?{y:{ticks:{callback:v=>'$'+Math.round(v).toLocaleString('es-AR')},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}}:{},
+    }
+  });
 }
 
 function clearDash(msg) {
   ['d-act','d-carg','d-cons','d-sald'].forEach(id=>document.getElementById(id).textContent='—');
   document.getElementById('dash-body').innerHTML=`<tr><td colspan="6" class="empty">${msg}</td></tr>`;
   document.getElementById('glob-body').innerHTML=`<tr><td colspan="6" class="empty">${msg}</td></tr>`;
+  document.getElementById('ranking-wrap').innerHTML=`<div class="empty">${msg}</div>`;
 }
 
-// ═══════════════════════════════════════════════════
-//  API
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+// EXPORTAR EXCEL
+// ═══════════════════════════════════════════
+async function exportarExcel() {
+  if (!API) { alert('Configurá la URL de Apps Script primero.'); return; }
+  try {
+    const [rT,rM]=await Promise.all([apiCall({action:'getTarjetas'}),apiCall({action:'getMovimientos'})]);
+    const ts=rT.ok?(rT.tarjetas||[]):[];
+    const movs=rM.ok?(rM.movimientos||[]):[];
+    const hoy=new Date();
+    const mesActual=hoy.getMonth()+1;
+    const anioActual=hoy.getFullYear();
+    const movsDelMes=movs.filter(m=>{
+      const partes=(m['Fecha']||'').split('/');
+      if (partes.length<3) return false;
+      return parseInt(partes[1])===mesActual && parseInt(partes[2])===anioActual;
+    });
+
+    // Armar CSV con dos secciones
+    const sep=',';
+    const esc=v=>'"'+String(v||'').replace(/"/g,'""')+'"';
+
+    let csv='PORTO GELATO — REPORTE MENSUAL\n';
+    csv+=`Generado el: ${toDay()}\n\n`;
+
+    csv+='RESUMEN POR FRANQUICIA\n';
+    csv+=['Franquicia','Tarjetas Activas','Monto Cargado','Total Acreditado','Consumido','Saldo Actual','% Consumido'].map(esc).join(sep)+'\n';
+    FRANQS.forEach(fr=>{
+      const fts=ts.filter(t=>(t['Franquicia']||t.franquicia)===fr);
+      const act=fts.filter(t=>t['Estado']!=='Agotada').length;
+      const carg=fts.reduce((s,t)=>s+parseFloat(t['Monto Cargado']||0),0);
+      const totA=fts.reduce((s,t)=>s+parseFloat(t['Total Acreditado']||0),0);
+      const cons=fts.reduce((s,t)=>s+parseFloat(t['Total Consumido']||0),0);
+      const sald=fts.reduce((s,t)=>s+parseFloat(t['Saldo Actual']||0),0);
+      const pct=totA>0?(cons/totA*100).toFixed(1)+'%':'0%';
+      csv+=[fr,act,carg,totA,cons,sald,pct].map(esc).join(sep)+'\n';
+    });
+
+    csv+='\nMOVIMIENTOS DEL MES\n';
+    csv+=['Fecha','Hora','ID Tarjeta','Titular','Franquicia','Tipo','Monto','Saldo','Detalle'].map(esc).join(sep)+'\n';
+    movsDelMes.forEach(m=>{
+      csv+=[m['Fecha'],m['Hora'],m['ID Tarjeta'],m['Titular'],m['Franquicia'],m['Tipo'],m['Monto'],m['Saldo'],m['Detalle']].map(esc).join(sep)+'\n';
+    });
+
+    const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`Porto_Gelato_Reporte_${anioActual}_${String(mesActual).padStart(2,'0')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) { alert('Error al generar el reporte. Intentá de nuevo.'); }
+}
+
+// ═══════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════
 async function apiCall(params) {
-  const url = API + '?' + new URLSearchParams(params).toString();
-  const r   = await fetch(url, {redirect:'follow'});
-  const txt = await r.text();
-  try { return JSON.parse(txt); } catch(e) { throw new Error('Respuesta inválida'); }
+  const url=API+'?'+new URLSearchParams(params).toString();
+  const r=await fetch(url,{redirect:'follow'});
+  const txt=await r.text();
+  try{return JSON.parse(txt);}catch(e){throw new Error('Respuesta inválida');}
 }
+async function postApi(payload) { return apiCall(payload); }
 
-async function postApi(payload) {
-  return apiCall(payload);
-}
-
-// ═══════════════════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════════════════
-function showAl(id, msg, type) {
-  const el = document.getElementById(id);
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+function showAl(id,msg,type) {
+  const el=document.getElementById(id);
   if (!el) return;
-  el.textContent = msg;
-  el.className = 'al al-'+(type==='ok'?'ok':type==='err'?'err':'info')+' on';
+  el.textContent=msg;
+  el.className='al al-'+(type==='ok'?'ok':type==='err'?'err':'info')+' on';
   setTimeout(()=>el.className='al',5000);
 }
-
-function setBtnL(id, loading, txt) {
-  const btn = document.getElementById(id);
-  btn.disabled = loading;
-  btn.innerHTML = loading ? '<span class="spin"></span> Guardando...' : txt;
+function setBtnL(id,loading,txt) {
+  const btn=document.getElementById(id);
+  btn.disabled=loading;
+  btn.innerHTML=loading?'<span class="spin"></span> Guardando...':txt;
 }
 </script>
 </body>
