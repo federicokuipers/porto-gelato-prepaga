@@ -255,7 +255,6 @@ tbody tr:hover{background:var(--g1);}
         <option value="Porto Gelato - Jovita">Porto Gelato - Jovita</option>
         <option value="Porto Gelato - Carpinteria">Porto Gelato - Carpintería</option>
         <option value="Porto Gelato - Merlo">Porto Gelato - Merlo</option>
-        <option value="Porto Gelato - Cordoba">Porto Gelato - Cordoba</option>
         <option value="__admin__">Administración</option>
       </select>
     </div>
@@ -292,7 +291,6 @@ tbody tr:hover{background:var(--g1);}
           <option value="Porto Gelato - Jovita">Porto Gelato - Jovita</option>
           <option value="Porto Gelato - Carpinteria">Porto Gelato - Carpintería</option>
           <option value="Porto Gelato - Merlo">Porto Gelato - Merlo</option>
-          <option value="Porto Gelato - Cordoba">Porto Gelato - Cordoba</option>
         </select>
       </div>
       <div class="lf">
@@ -381,7 +379,6 @@ tbody tr:hover{background:var(--g1);}
       <option value="Porto Gelato - Jovita">Jovita</option>
       <option value="Porto Gelato - Carpinteria">Carpintería</option>
       <option value="Porto Gelato - Merlo">Merlo</option>
-      <option value="Porto Gelato - Cordoba">Cordoba</option>
     </select>
   </div>
 
@@ -606,11 +603,10 @@ const CLAVES = {
   'Porto Gelato - Jovita':      { us:'3333',  due:'due3' },
   'Porto Gelato - Carpinteria': { us:'4444',  due:'due4' },
   'Porto Gelato - Merlo':       { us:'5555',  due:'due5' },
-  'Porto Gelato - Cordoba':     { us:'6666',  due:'due6' },
   '__admin__':                  { admin:'portoadmin2026' }
 };
 const SALDO_BAJO = 5000;
-const FRANQS = ['Porto Gelato - Av. España','Porto Gelato - Banda Norte','Porto Gelato - Jovita','Porto Gelato - Carpinteria','Porto Gelato - Merlo','Porto Gelato - Cordoba'];
+const FRANQS = ['Porto Gelato - Av. España','Porto Gelato - Banda Norte','Porto Gelato - Jovita','Porto Gelato - Carpinteria','Porto Gelato - Merlo'];
 
 // ═══════════════════════════════════════
 // STATE
@@ -625,7 +621,7 @@ let charts = {};
 let modalRolLocal = '';
 
 const fmt      = n => '$' + Math.round(n).toLocaleString('es-AR');
-const bonusPct = m => m >= 50000 ? 0.15 : 0.10;
+const bonusPct = m => m >= 50000 ? 0.20 : 0.15;
 const toDay    = () => new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
 
 // Restaurar ultimo local
