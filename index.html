@@ -39,9 +39,9 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--g1);color:var(-
 .cumple-banner .item{font-size:12px;color:var(--g7);padding:2px 0;}
 
 /* MODAL RAPIDO */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:flex-start;justify-content:center;padding:12px;overflow-y:auto;}
 .modal-overlay.on{display:flex;}
-.modal-box{background:var(--wh);border-radius:16px;padding:24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto;}
+.modal-box{background:var(--wh);border-radius:16px;padding:20px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .modal-header .ct{font-size:16px;font-weight:600;}
 .modal-close{background:var(--g1);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;color:var(--g5);display:grid;place-items:center;}
@@ -211,6 +211,11 @@ tbody tr:hover{background:var(--g1);}
 .helpbox li{font-size:12px;color:var(--g7);line-height:1.5;}
 .helpbox code{font-family:'DM Mono',monospace;font-size:11px;background:var(--g2);padding:2px 5px;border-radius:4px;}
 
+/* MODAL RESPONSIVE */
+@media(max-width:480px){
+  .modal-box{padding:16px;border-radius:12px;margin:auto;}
+  .modal-overlay{align-items:flex-start;padding:8px;}
+}
 /* FAB */
 .fab{position:fixed;bottom:20px;right:20px;width:48px;height:48px;background:var(--y);border-radius:50%;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.2);font-size:22px;display:none;align-items:center;justify-content:center;z-index:99;transition:transform .15s;}
 .fab:hover{transform:scale(1.08);}
@@ -379,14 +384,18 @@ tbody tr:hover{background:var(--g1);}
       <option value="Porto Gelato - Jovita">Jovita</option>
       <option value="Porto Gelato - Carpinteria">Carpintería</option>
       <option value="Porto Gelato - Merlo">Merlo</option>
+      <option value="Porto Gelato - Cordoba">Córdoba</option>
     </select>
   </div>
 
-  <div class="itabs">
-    <button class="itab on" onclick="showTab('nueva',this)">Nueva tarjeta</button>
-    <button class="itab" onclick="showTab('recargar',this)">Recargar</button>
-    <button class="itab" onclick="showTab('consumo',this)">Consumo</button>
-    <button class="itab" onclick="showTab('movs',this)">Movimientos</button>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+    <div class="itabs" style="margin-bottom:0">
+      <button class="itab on" id="itab-nueva" onclick="showTab('nueva',this)">Nueva tarjeta</button>
+      <button class="itab" id="itab-recargar" onclick="showTab('recargar',this)">Recargar</button>
+      <button class="itab" id="itab-consumo" onclick="showTab('consumo',this)">Consumo</button>
+      <button class="itab" id="itab-movs" onclick="showTab('movs',this)">Movimientos</button>
+    </div>
+    <button class="btn btn-sm btn-s" id="btn-actualizar-tab" onclick="actualizarTab()" style="white-space:nowrap;display:flex;align-items:center;gap:4px"><span id="spin-tab" style="display:none" class="spin"></span>↻ Actualizar</button>
   </div>
 
   <!-- NUEVA TARJETA -->
@@ -567,6 +576,7 @@ tbody tr:hover{background:var(--g1);}
         <li>Jovita → <code>3333</code></li>
         <li>Carpintería → <code>4444</code></li>
         <li>Merlo → <code>5555</code></li>
+        <li>Córdoba → <code>6666</code></li>
       </ul>
     </div>
     <div class="helpbox">
@@ -577,6 +587,7 @@ tbody tr:hover{background:var(--g1);}
         <li>Jovita → <code>due3</code></li>
         <li>Carpintería → <code>due4</code></li>
         <li>Merlo → <code>due5</code></li>
+        <li>Córdoba → <code>due6</code></li>
       </ul>
     </div>
     <div class="helpbox">
@@ -629,17 +640,7 @@ const savedLocal = localStorage.getItem('pg_last_local');
 if (savedLocal) { const s=document.getElementById('login-local'); if(s) s.value=savedLocal; }
 
 // Mostrar modal automaticamente si hay local guardado (apertura PC)
-window.addEventListener('load', () => {
-  const ul = localStorage.getItem('pg_last_local');
-  if (ul && ul !== '__admin__') {
-    setTimeout(() => {
-      document.getElementById('modal-local').value = ul;
-      document.getElementById('pg-login').style.display = 'none';
-      document.getElementById('modal-rapido').classList.add('on');
-      verificarCumpleanosModal();
-    }, 300);
-  }
-});
+// Modal auto-open desactivado — se usa solo con el botón + flotante
 
 // ═══════════════════════════════════════
 // CUMPLEAÑOS
@@ -676,10 +677,17 @@ async function verificarCumpleanosModal() {
 // MODAL RAPIDO
 // ═══════════════════════════════════════
 function abrirModal() {
+  // Siempre resetear al estado de login al abrir
   document.getElementById('modal-rapido').classList.add('on');
   document.getElementById('modal-login-section').style.display = 'block';
   document.getElementById('modal-form-section').style.display = 'none';
   document.getElementById('modal-err').classList.remove('on');
+  document.getElementById('modal-pass').value = '';
+  // Pre-seleccionar local guardado
+  const ul = localStorage.getItem('pg_last_local');
+  if (ul && ul !== '__admin__') {
+    document.getElementById('modal-local').value = ul;
+  }
   verificarCumpleanosModal();
 }
 
@@ -885,13 +893,26 @@ function showScr(id,btn) {
   if (id==='dash') loadDash();
   if (id==='mi')   loadMiLocal();
 }
+let tabActualId = 'nueva';
 function showTab(id,btn) {
+  tabActualId = id;
   document.querySelectorAll('.itab').forEach(e=>e.classList.remove('on'));
   btn.classList.add('on');
   ['nueva','recargar','consumo','movs'].forEach(t=>
     document.getElementById('tab-'+t).style.display=t===id?'block':'none');
   if (id==='movs') loadMovs();
   if (id==='consumo'||id==='recargar') loadCache();
+}
+async function actualizarTab() {
+  const spin = document.getElementById('spin-tab');
+  const btn  = document.getElementById('btn-actualizar-tab');
+  spin.style.display='inline-block'; btn.disabled=true;
+  try {
+    if (tabActualId==='movs') await loadMovs();
+    else await loadCache();
+  } finally {
+    spin.style.display='none'; btn.disabled=false;
+  }
 }
 
 // ═══════════════════════════════════════
